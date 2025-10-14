@@ -30,6 +30,30 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .pulse {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .celebration {
+            animation: celebration 0.8s ease-in-out;
+        }
+        @keyframes celebration {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(-5deg); }
+            50% { transform: scale(1.3) rotate(5deg); }
+            75% { transform: scale(1.2) rotate(-5deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex flex-col h-screen antialiased">
@@ -69,6 +93,30 @@
                 <p class="text-gray-300">Your muscles grow when you rest. Stay hydrated and eat well.</p>
             </div>
 
+            <!-- Stats Card -->
+            <div class="bg-gray-800 rounded-2xl p-5 shadow-lg space-y-3 fade-in">
+                <h3 class="font-bold text-lg">Your Progress</h3>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="text-center">
+                        <p class="text-3xl font-bold text-blue-400" id="workout-streak">0</p>
+                        <p class="text-xs text-gray-400">Day Streak</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-3xl font-bold text-green-400" id="total-workouts">0</p>
+                        <p class="text-xs text-gray-400">Workouts</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-3xl font-bold text-purple-400" id="this-week">0</p>
+                        <p class="text-xs text-gray-400">This Week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motivational Quote -->
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-5 shadow-lg fade-in">
+                <p class="text-white text-center italic" id="motivational-quote">"Discipline is choosing between what you want now and what you want most."</p>
+            </div>
+
             <div class="bg-gray-800 rounded-2xl p-5 shadow-lg space-y-3 fade-in">
                 <div class="flex justify-between items-center">
                     <div>
@@ -86,15 +134,26 @@
 
         <!-- Workout Screen -->
         <div id="workout-screen" class="hidden p-6 space-y-4">
+            <div class="flex items-center justify-between mb-2">
+                <button id="back-to-home-btn" class="text-gray-400 hover:text-white touch-active">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <p id="progress-text" class="text-gray-400 font-medium">1 / 8</p>
+            </div>
             <div class="flex items-center justify-between">
                 <h2 id="current-exercise-title" class="text-2xl font-bold">Goblet Squats</h2>
-                <p id="progress-text" class="text-gray-400 font-medium">1 / 8</p>
+                <button id="exercise-info-btn" class="text-blue-400 touch-active">
+                    <i data-lucide="info"></i>
+                </button>
             </div>
             <div class="w-full bg-gray-700 rounded-full h-2.5">
                 <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full progress-bar-inner" style="width: 10%"></div>
             </div>
 
             <div class="text-center bg-gray-800 rounded-2xl p-8 my-4 fade-in">
+                <div id="exercise-tip" class="bg-blue-900 bg-opacity-30 rounded-lg p-3 mb-4 text-sm text-blue-200 hidden">
+                    <p id="exercise-tip-text"></p>
+                </div>
                 <p class="text-gray-400 text-lg">Current Set</p>
                 <p id="current-set" class="text-7xl font-extrabold my-2">1 / 3</p>
                 <p id="current-reps" class="text-blue-400 text-xl font-semibold">8 - 12 Reps</p>
@@ -105,7 +164,10 @@
             <div id="rest-timer-view" class="hidden text-center fade-in">
                 <p class="text-lg text-green-400 font-bold">REST</p>
                 <p id="rest-timer" class="text-6xl font-extrabold my-2">60</p>
-                <button id="skip-rest-btn" class="bg-gray-700 text-white px-6 py-2 rounded-lg touch-active transition-all duration-200">Skip</button>
+                <div class="flex justify-center gap-3 mt-3">
+                    <button id="skip-rest-btn" class="bg-gray-700 text-white px-6 py-2 rounded-lg touch-active transition-all duration-200">Skip</button>
+                    <button id="add-time-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg touch-active transition-all duration-200">+15s</button>
+                </div>
             </div>
             
             <button id="next-exercise-btn" class="w-full bg-gray-700 text-white font-bold py-3 rounded-xl text-md touch-active transition-all duration-200 mt-4 hidden">Next Exercise</button>
@@ -114,9 +176,24 @@
         
         <!-- Workout Complete Screen -->
         <div id="workout-complete-screen" class="hidden p-8 flex flex-col items-center justify-center text-center space-y-4 h-full">
-            <i data-lucide="party-popper" class="text-yellow-400" size="64"></i>
-            <h2 class="text-3xl font-bold">Workout Complete!</h2>
+            <div class="celebration">
+                <i data-lucide="trophy" class="text-yellow-400" size="80"></i>
+            </div>
+            <h2 class="text-4xl font-bold">Workout Complete!</h2>
             <p class="text-gray-300 max-w-sm">Amazing work. You've pushed your limits. Now remember to refuel with protein and get a good night's sleep.</p>
+            <div class="bg-gray-800 rounded-xl p-4 max-w-sm w-full mt-4">
+                <p class="text-sm text-gray-400 mb-2">Session Summary</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <p class="text-2xl font-bold text-blue-400" id="session-exercises">8</p>
+                        <p class="text-xs text-gray-400">Exercises</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-green-400" id="session-sets">24</p>
+                        <p class="text-xs text-gray-400">Sets</p>
+                    </div>
+                </div>
+            </div>
             <button id="go-home-btn" class="w-full max-w-sm bg-blue-600 text-white font-bold py-4 rounded-xl text-lg touch-active transition-all duration-200 mt-6">Back to Home</button>
         </div>
 
@@ -178,6 +255,40 @@
             </div>
         </div>
 
+        <!-- History Screen -->
+        <div id="history-screen" class="hidden p-6 space-y-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold">Workout History</h2>
+                <button id="clear-history-btn" class="text-red-400 text-sm touch-active">
+                    <i data-lucide="trash-2" class="inline-block w-4 h-4"></i> Clear
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <div class="bg-gray-800 rounded-xl p-4 text-center">
+                    <p class="text-2xl font-bold text-blue-400" id="history-streak">0</p>
+                    <p class="text-xs text-gray-400 mt-1">Current Streak</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-4 text-center">
+                    <p class="text-2xl font-bold text-green-400" id="history-total">0</p>
+                    <p class="text-xs text-gray-400 mt-1">Total</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-4 text-center">
+                    <p class="text-2xl font-bold text-purple-400" id="history-month">0</p>
+                    <p class="text-xs text-gray-400 mt-1">This Month</p>
+                </div>
+            </div>
+
+            <div id="workout-history-list" class="space-y-3">
+                <!-- History items will be inserted here -->
+            </div>
+            
+            <div id="empty-history" class="text-center py-12 hidden">
+                <i data-lucide="calendar-x" class="mx-auto text-gray-600 mb-3"></i>
+                <p class="text-gray-400">No workouts yet. Start your first one today!</p>
+            </div>
+        </div>
+
     </main>
 
     <!-- Bottom Navigation -->
@@ -193,6 +304,10 @@
         <button data-screen="diet-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
             <i data-lucide="utensils-crossed"></i>
             <span class="text-xs block">Diet</span>
+        </button>
+        <button data-screen="history-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
+            <i data-lucide="calendar-clock"></i>
+            <span class="text-xs block">History</span>
         </button>
     </nav>
     
@@ -214,11 +329,69 @@
             lucide.createIcons();
 
             const WORKOUTS = {
-                A: { title: "Workout A", subtitle: "Push & Squat Focus", icon: "barbell", exercises: [{ name: "Goblet Squats", sets: 3, reps: "8-12" }, { name: "Dumbbell Bench Press", sets: 3, reps: "8-12" }, { name: "Overhead Press", sets: 3, reps: "8-12" }, { name: "Lunges", sets: 3, reps: "10-12 per leg" }, { name: "Tricep Pushdowns", sets: 2, reps: "12-15" }], core: [{ name: "Plank", sets: 3, reps: "45-60 sec" }, { name: "Lying Leg Raises", sets: 3, reps: "15-20" }, { name: "Russian Twists", sets: 3, reps: "20 total" }] },
-                B: { title: "Workout B", subtitle: "Pull & Hinge Focus", icon: "move-up", exercises: [{ name: "Romanian Deadlifts", sets: 3, reps: "8-12" }, { name: "Lat Pulldowns", sets: 3, reps: "8-12" }, { name: "Bent-Over Rows", sets: 3, reps: "10-12 per arm" }, { name: "Leg Press", sets: 3, reps: "10-15" }, { name: "Bicep Curls", sets: 2, reps: "12-15" }], core: [{ name: "Plank", sets: 3, reps: "45-60 sec" }, { name: "Lying Leg Raises", sets: 3, reps: "15-20" }, { name: "Russian Twists", sets: 3, reps: "20 total" }] }
+                A: { 
+                    title: "Workout A", 
+                    subtitle: "Push & Squat Focus", 
+                    icon: "barbell", 
+                    exercises: [
+                        { name: "Goblet Squats", sets: 3, reps: "8-12", tip: "Keep chest up, core tight. Drive through heels." }, 
+                        { name: "Dumbbell Bench Press", sets: 3, reps: "8-12", tip: "Control the descent. Push explosively up." }, 
+                        { name: "Overhead Press", sets: 3, reps: "8-12", tip: "Engage core. Press weight straight overhead." }, 
+                        { name: "Lunges", sets: 3, reps: "10-12 per leg", tip: "Keep torso upright. Back knee nearly touches ground." }, 
+                        { name: "Tricep Pushdowns", sets: 2, reps: "12-15", tip: "Keep elbows locked at sides. Full extension." }
+                    ], 
+                    core: [
+                        { name: "Plank", sets: 3, reps: "45-60 sec", tip: "Body in straight line. Don't let hips sag." }, 
+                        { name: "Lying Leg Raises", sets: 3, reps: "15-20", tip: "Keep lower back pressed to floor. Controlled movement." }, 
+                        { name: "Russian Twists", sets: 3, reps: "20 total", tip: "Twist from core, not arms. Keep feet elevated." }
+                    ] 
+                },
+                B: { 
+                    title: "Workout B", 
+                    subtitle: "Pull & Hinge Focus", 
+                    icon: "move-up", 
+                    exercises: [
+                        { name: "Romanian Deadlifts", sets: 3, reps: "8-12", tip: "Hinge at hips. Keep back straight and core tight." }, 
+                        { name: "Lat Pulldowns", sets: 3, reps: "8-12", tip: "Pull to upper chest. Squeeze shoulder blades together." }, 
+                        { name: "Bent-Over Rows", sets: 3, reps: "10-12 per arm", tip: "Pull elbow back. Keep core engaged throughout." }, 
+                        { name: "Leg Press", sets: 3, reps: "10-15", tip: "Full range of motion. Don't lock knees at top." }, 
+                        { name: "Bicep Curls", sets: 2, reps: "12-15", tip: "No swinging. Full contraction at top." }
+                    ], 
+                    core: [
+                        { name: "Plank", sets: 3, reps: "45-60 sec", tip: "Body in straight line. Don't let hips sag." }, 
+                        { name: "Lying Leg Raises", sets: 3, reps: "15-20", tip: "Keep lower back pressed to floor. Controlled movement." }, 
+                        { name: "Russian Twists", sets: 3, reps: "20 total", tip: "Twist from core, not arms. Keep feet elevated." }
+                    ] 
+                }
             };
 
-            let state = { currentScreen: 'today-screen', lastWorkoutType: localStorage.getItem('lastWorkoutType') || 'B', lastWorkoutDate: localStorage.getItem('lastWorkoutDate') || '', todaysWorkout: null, workoutInProgress: false, currentExerciseIndex: 0, currentSet: 1, restTimerInterval: null, remindersEnabled: JSON.parse(localStorage.getItem('remindersEnabled')) || false };
+            const MOTIVATIONAL_QUOTES = [
+                "Discipline is choosing between what you want now and what you want most.",
+                "The only bad workout is the one that didn't happen.",
+                "Your body can stand almost anything. It's your mind you have to convince.",
+                "Strength doesn't come from what you can do. It comes from overcoming what you couldn't.",
+                "The pain you feel today will be the strength you feel tomorrow.",
+                "Don't count the days, make the days count.",
+                "Success isn't given. It's earned. On the track, on the field, in the gym.",
+                "The difference between try and triumph is a little umph.",
+                "Push yourself because no one else is going to do it for you.",
+                "Great things never come from comfort zones."
+            ];
+
+            let state = { 
+                currentScreen: 'today-screen', 
+                lastWorkoutType: localStorage.getItem('lastWorkoutType') || 'B', 
+                lastWorkoutDate: localStorage.getItem('lastWorkoutDate') || '', 
+                todaysWorkout: null, 
+                workoutInProgress: false, 
+                currentExerciseIndex: 0, 
+                currentSet: 1, 
+                restTimerInterval: null,
+                restTimeLeft: 60,
+                remindersEnabled: JSON.parse(localStorage.getItem('remindersEnabled')) || false,
+                workoutHistory: JSON.parse(localStorage.getItem('workoutHistory')) || [],
+                showExerciseTip: false
+            };
             let hiitState = { timer: null, running: false, mode: 'prep', timeLeft: 10, totalRounds: 10, currentRound: 1, sprintDuration: 30, restDuration: 60, prepDuration: 10 };
             
             const screens = document.querySelectorAll('main > div');
@@ -249,6 +422,23 @@
             const hiitRoundEl = document.getElementById('hiit-round');
             const hiitStartPauseBtn = document.getElementById('hiit-start-pause-btn');
             const hiitResetBtn = document.getElementById('hiit-reset-btn');
+            const backToHomeBtn = document.getElementById('back-to-home-btn');
+            const exerciseInfoBtn = document.getElementById('exercise-info-btn');
+            const exerciseTip = document.getElementById('exercise-tip');
+            const exerciseTipText = document.getElementById('exercise-tip-text');
+            const motivationalQuote = document.getElementById('motivational-quote');
+            const workoutStreakEl = document.getElementById('workout-streak');
+            const totalWorkoutsEl = document.getElementById('total-workouts');
+            const thisWeekEl = document.getElementById('this-week');
+            const historyStreakEl = document.getElementById('history-streak');
+            const historyTotalEl = document.getElementById('history-total');
+            const historyMonthEl = document.getElementById('history-month');
+            const workoutHistoryList = document.getElementById('workout-history-list');
+            const emptyHistory = document.getElementById('empty-history');
+            const clearHistoryBtn = document.getElementById('clear-history-btn');
+            const addTimeBtn = document.getElementById('add-time-btn');
+            const sessionExercisesEl = document.getElementById('session-exercises');
+            const sessionSetsEl = document.getElementById('session-sets');
             
             function determineTodaysWorkout() {
                 const today = new Date().toISOString().slice(0, 10);
@@ -268,6 +458,12 @@
                     btn.classList.toggle('text-gray-400', !isActive);
                 });
                 state.currentScreen = screenId;
+                
+                // Refresh history when viewing history screen
+                if (screenId === 'history-screen') {
+                    calculateStats();
+                    renderHistory();
+                }
             }
 
             function startWorkout() {
@@ -297,12 +493,25 @@
                 restTimerView.classList.add('hidden');
                 nextExerciseBtn.classList.add('hidden');
                 finishWorkoutBtn.classList.add('hidden');
+                
+                // Show/hide exercise tip
+                if (state.showExerciseTip && exercise.tip) {
+                    exerciseTip.classList.remove('hidden');
+                    exerciseTipText.textContent = exercise.tip;
+                } else {
+                    exerciseTip.classList.add('hidden');
+                }
             }
 
             function handleCompleteSet() {
                 const workout = state.todaysWorkout;
                 const fullWorkoutList = [...workout.exercises, ...workout.core];
                 const exercise = fullWorkoutList[state.currentExerciseIndex];
+                
+                // Visual feedback
+                completeSetBtn.classList.add('shake');
+                setTimeout(() => completeSetBtn.classList.remove('shake'), 500);
+                
                 if (state.currentSet < exercise.sets) {
                     state.currentSet++;
                     startRestTimer();
@@ -325,18 +534,25 @@
             function startRestTimer(duration = 60) {
                 completeSetBtn.classList.add('hidden');
                 restTimerView.classList.remove('hidden');
-                let timeLeft = duration;
-                restTimerEl.textContent = timeLeft;
+                state.restTimeLeft = duration;
+                restTimerEl.textContent = state.restTimeLeft;
                 clearInterval(state.restTimerInterval);
                 state.restTimerInterval = setInterval(() => {
-                    timeLeft--;
-                    restTimerEl.textContent = timeLeft;
-                    if (timeLeft <= 0) {
+                    state.restTimeLeft--;
+                    restTimerEl.textContent = state.restTimeLeft;
+                    if (state.restTimeLeft <= 0) {
                         clearInterval(state.restTimerInterval);
                         restTimerView.classList.add('hidden');
                         renderCurrentExercise();
                     }
                 }, 1000);
+            }
+
+            function addRestTime() {
+                state.restTimeLeft += 15;
+                restTimerEl.textContent = state.restTimeLeft;
+                addTimeBtn.classList.add('pulse');
+                setTimeout(() => addTimeBtn.classList.remove('pulse'), 500);
             }
 
             function skipRest() {
@@ -351,6 +567,22 @@
                 state.lastWorkoutDate = new Date().toISOString().slice(0, 10);
                 localStorage.setItem('lastWorkoutType', state.lastWorkoutType);
                 localStorage.setItem('lastWorkoutDate', state.lastWorkoutDate);
+                
+                // Calculate session stats
+                const workout = state.todaysWorkout;
+                const totalExercises = workout.exercises.length + workout.core.length;
+                const totalSets = [...workout.exercises, ...workout.core].reduce((sum, ex) => sum + ex.sets, 0);
+                sessionExercisesEl.textContent = totalExercises;
+                sessionSetsEl.textContent = totalSets;
+                
+                // Save workout to history
+                state.workoutHistory.push({
+                    type: state.lastWorkoutType,
+                    date: state.lastWorkoutDate,
+                    timestamp: new Date().getTime()
+                });
+                localStorage.setItem('workoutHistory', JSON.stringify(state.workoutHistory));
+                
                 showScreen('workout-complete-screen');
             }
 
@@ -389,15 +621,48 @@
                 hiitStatusEl.textContent = hiitState.mode === 'prep' ? 'GET READY' : hiitState.mode.toUpperCase() + '!';
             }
 
+            function playBeep(count = 1) {
+                // Simple audio feedback using Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        oscillator.frequency.value = count > 1 ? 880 : 440;
+                        oscillator.type = 'sine';
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.1);
+                    }, i * 150);
+                }
+            }
+
             function hiitTick() {
                 hiitState.timeLeft--;
+                
+                // Sound notifications
+                if (hiitState.timeLeft === 3) {
+                    playBeep(1);
+                    hiitTimerEl.classList.add('pulse');
+                } else if (hiitState.timeLeft === 0) {
+                    playBeep(2);
+                    hiitTimerEl.classList.remove('pulse');
+                }
+                
                 if (hiitState.timeLeft < 0) {
                     switch(hiitState.mode) {
                         case 'prep': hiitState.mode = 'sprint'; hiitState.timeLeft = hiitState.sprintDuration; break;
                         case 'sprint': hiitState.mode = 'rest'; hiitState.timeLeft = hiitState.restDuration; break;
                         case 'rest':
                             hiitState.currentRound++;
-                            if (hiitState.currentRound > hiitState.totalRounds) { resetHiit(); return; }
+                            if (hiitState.currentRound > hiitState.totalRounds) { 
+                                playBeep(3);
+                                resetHiit(); 
+                                return; 
+                            }
                             hiitState.mode = 'sprint'; hiitState.timeLeft = hiitState.sprintDuration; break;
                     }
                 }
@@ -423,9 +688,116 @@
                 updateHiitUI();
             }
 
+            function calculateStats() {
+                const now = new Date();
+                const history = state.workoutHistory;
+                
+                // Total workouts
+                const total = history.length;
+                totalWorkoutsEl.textContent = total;
+                if (historyTotalEl) historyTotalEl.textContent = total;
+                
+                // This week's workouts
+                const startOfWeek = new Date(now);
+                startOfWeek.setDate(now.getDate() - now.getDay());
+                startOfWeek.setHours(0, 0, 0, 0);
+                const thisWeek = history.filter(w => new Date(w.date) >= startOfWeek).length;
+                thisWeekEl.textContent = thisWeek;
+                
+                // This month's workouts
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                const thisMonth = history.filter(w => new Date(w.date) >= startOfMonth).length;
+                if (historyMonthEl) historyMonthEl.textContent = thisMonth;
+                
+                // Streak calculation
+                let streak = 0;
+                const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
+                let checkDate = new Date();
+                checkDate.setHours(0, 0, 0, 0);
+                
+                for (let i = 0; i < sortedHistory.length; i++) {
+                    const workoutDate = new Date(sortedHistory[i].date);
+                    workoutDate.setHours(0, 0, 0, 0);
+                    
+                    // Check if workout is on a valid workout day (M/W/F = 1/3/5)
+                    while (checkDate.getDay() !== 1 && checkDate.getDay() !== 3 && checkDate.getDay() !== 5) {
+                        checkDate.setDate(checkDate.getDate() - 1);
+                    }
+                    
+                    if (workoutDate.getTime() === checkDate.getTime()) {
+                        streak++;
+                        checkDate.setDate(checkDate.getDate() - 2); // Move to next potential workout day
+                    } else {
+                        break;
+                    }
+                }
+                workoutStreakEl.textContent = streak;
+                if (historyStreakEl) historyStreakEl.textContent = streak;
+            }
+
+            function renderHistory() {
+                const history = state.workoutHistory;
+                
+                if (history.length === 0) {
+                    emptyHistory.classList.remove('hidden');
+                    workoutHistoryList.innerHTML = '';
+                    return;
+                }
+                
+                emptyHistory.classList.add('hidden');
+                
+                // Sort by date descending (newest first)
+                const sortedHistory = [...history].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                workoutHistoryList.innerHTML = sortedHistory.map((workout, index) => {
+                    const date = new Date(workout.date);
+                    const isToday = date.toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const workoutInfo = WORKOUTS[workout.type];
+                    
+                    return `
+                        <div class="bg-gray-800 rounded-xl p-4 flex items-center justify-between fade-in">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-${workout.type === 'A' ? 'blue' : 'purple'}-600 p-3 rounded-lg">
+                                    <i data-lucide="${workoutInfo.icon}" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">${workoutInfo.title}${isToday ? ' 🔥' : ''}</h3>
+                                    <p class="text-sm text-gray-400">${dayName}, ${dateStr}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">${workoutInfo.exercises.length + workoutInfo.core.length} exercises</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Reinitialize lucide icons after adding new HTML
+                lucide.createIcons();
+            }
+
+            function clearHistory() {
+                if (confirm('Are you sure you want to clear all workout history? This cannot be undone.')) {
+                    state.workoutHistory = [];
+                    localStorage.setItem('workoutHistory', JSON.stringify([]));
+                    calculateStats();
+                    renderHistory();
+                }
+            }
+
             function init() {
                 currentDateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
                 state.todaysWorkout = determineTodaysWorkout();
+                
+                // Display random motivational quote
+                const randomQuote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
+                motivationalQuote.textContent = `"${randomQuote}"`;
+                
+                // Calculate and display stats
+                calculateStats();
+                
                 if (state.todaysWorkout) {
                     workoutCard.classList.remove('hidden');
                     restDayCard.classList.add('hidden');
@@ -445,7 +817,10 @@
 
             function attachEventListeners() {
                 navBtns.forEach(btn => btn.addEventListener('click', () => showScreen(btn.dataset.screen)));
-                goHomeBtn.addEventListener('click', init);
+                goHomeBtn.addEventListener('click', () => {
+                    init();
+                    showScreen('today-screen');
+                });
                 startWorkoutBtn.addEventListener('click', startWorkout);
                 reminderToggle.addEventListener('change', handleReminderToggle);
                 completeSetBtn.addEventListener('click', handleCompleteSet);
@@ -454,6 +829,19 @@
                 skipRestBtn.addEventListener('click', skipRest);
                 hiitStartPauseBtn.addEventListener('click', toggleHiit);
                 hiitResetBtn.addEventListener('click', resetHiit);
+                backToHomeBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to quit this workout?')) {
+                        state.workoutInProgress = false;
+                        init();
+                        showScreen('today-screen');
+                    }
+                });
+                exerciseInfoBtn.addEventListener('click', () => {
+                    state.showExerciseTip = !state.showExerciseTip;
+                    renderCurrentExercise();
+                });
+                clearHistoryBtn.addEventListener('click', clearHistory);
+                addTimeBtn.addEventListener('click', addRestTime);
             }
 
             attachEventListeners();
