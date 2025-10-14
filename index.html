@@ -25,16 +25,61 @@
             opacity: 0.8;
         }
         .progress-bar-inner {
-            transition: width 0.5s ease-in-out;
-            background: linear-gradient(90deg, #2563eb, #06b6d4);
-            box-shadow: 0 0 12px rgba(37, 99, 235, 0.45);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, 
+                #a855f7 0%, 
+                #ec4899 50%, 
+                #f43f5e 100%);
+            box-shadow: 
+                0 0 20px rgba(168, 85, 247, 0.6),
+                0 0 40px rgba(236, 72, 153, 0.4);
+            animation: progressPulse 2s ease-in-out infinite;
+        }
+        @keyframes progressPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px rgba(168, 85, 247, 0.6),
+                    0 0 40px rgba(236, 72, 153, 0.4);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 30px rgba(168, 85, 247, 0.8),
+                    0 0 60px rgba(236, 72, 153, 0.6);
+            }
         }
         .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        .slide-in-left {
+            animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .slide-in-right {
+            animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .scale-in {
+            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
         .pulse {
             animation: pulse 1s ease-in-out infinite;
@@ -60,32 +105,69 @@
             50% { transform: scale(1.3) rotate(5deg); }
             75% { transform: scale(1.2) rotate(-5deg); }
         }
+        .countdown-pulse {
+            animation: countdownPulse 1s ease-in-out;
+        }
+        @keyframes countdownPulse {
+            0%, 100% { transform: scale(1); color: #22c55e; }
+            50% { transform: scale(1.15); color: #fbbf24; }
+        }
+        .countdown-urgent {
+            animation: countdownUrgent 1s ease-in-out infinite;
+        }
+        @keyframes countdownUrgent {
+            0%, 100% { transform: scale(1); color: #ef4444; text-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+            50% { transform: scale(1.2); color: #f97316; text-shadow: 0 0 30px rgba(249, 115, 22, 0.7); }
+        }
         .app-shell {
             position: relative;
             background: 
-                radial-gradient(ellipse 80% 80% at 50% -20%, rgba(59, 130, 246, 0.15), transparent 50%),
-                radial-gradient(ellipse 60% 60% at 0% 100%, rgba(139, 92, 246, 0.1), transparent 50%),
-                radial-gradient(ellipse 60% 60% at 100% 100%, rgba(14, 165, 233, 0.1), transparent 50%),
-                #0a0f1e;
+                radial-gradient(ellipse 100% 100% at 50% -30%, rgba(124, 58, 237, 0.25), transparent 60%),
+                radial-gradient(ellipse 80% 80% at 0% 100%, rgba(236, 72, 153, 0.15), transparent 60%),
+                radial-gradient(ellipse 80% 80% at 100% 100%, rgba(59, 130, 246, 0.15), transparent 60%),
+                linear-gradient(180deg, #0f0318 0%, #1a0b2e 50%, #0a0612 100%);
             overflow-x: hidden;
             min-height: 100vh;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        @keyframes backgroundShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(10deg); }
         }
         .app-shell::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, rgba(2, 6, 23, 0.7), rgba(15, 23, 42, 0.4));
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
+            animation: floatingOrbs 15s ease-in-out infinite;
+        }
+        @keyframes floatingOrbs {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(20px, -20px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
         }
         .app-shell::after {
             content: "";
             position: fixed;
             inset: 0;
-            background: linear-gradient(120deg, rgba(37, 99, 235, 0.08), transparent 60%);
+            background: linear-gradient(135deg, 
+                rgba(124, 58, 237, 0.1) 0%, 
+                transparent 30%, 
+                transparent 70%, 
+                rgba(236, 72, 153, 0.1) 100%);
             mix-blend-mode: screen;
             pointer-events: none;
             z-index: 0;
+            animation: gradientSlide 12s ease-in-out infinite;
+        }
+        @keyframes gradientSlide {
+            0%, 100% { opacity: 0.6; transform: translateX(0); }
+            50% { opacity: 0.8; transform: translateX(10px); }
         }
         .app-main {
             position: relative;
@@ -93,25 +175,40 @@
         }
         .app-card {
             position: relative;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8));
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, 
+                rgba(30, 20, 50, 0.6) 0%, 
+                rgba(20, 15, 35, 0.85) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.15);
             box-shadow: 
-                0 20px 50px -12px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(20px) saturate(180%);
+                0 20px 60px -15px rgba(124, 58, 237, 0.3),
+                0 10px 30px -10px rgba(236, 72, 153, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px) saturate(180%);
             overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .app-card::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.22), transparent 55%);
+            background: radial-gradient(circle at top right, 
+                rgba(168, 85, 247, 0.25) 0%, 
+                rgba(236, 72, 153, 0.15) 40%, 
+                transparent 70%);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
         }
         .app-card:hover::before {
             opacity: 1;
+        }
+        .app-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: 
+                0 25px 70px -15px rgba(124, 58, 237, 0.4),
+                0 15px 40px -10px rgba(236, 72, 153, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
         .app-card > * {
             position: relative;
@@ -120,18 +217,42 @@
         .gradient-quote {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, 
+                #a855f7 0%, 
+                #ec4899 50%, 
+                #f43f5e 100%);
             box-shadow: 
-                0 20px 60px rgba(102, 126, 234, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                0 20px 70px rgba(168, 85, 247, 0.5),
+                0 10px 40px rgba(236, 72, 153, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            animation: quoteGlow 4s ease-in-out infinite;
+        }
+        @keyframes quoteGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 20px 70px rgba(168, 85, 247, 0.5),
+                    0 10px 40px rgba(236, 72, 153, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 25px 80px rgba(168, 85, 247, 0.6),
+                    0 15px 50px rgba(236, 72, 153, 0.5),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            }
         }
         .gradient-quote::before {
             content: "";
             position: absolute;
             inset: -30%;
-            background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
-            opacity: 0.6;
-            filter: blur(20px);
+            background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+            opacity: 0.7;
+            filter: blur(25px);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+            50% { transform: translate(10%, -10%); opacity: 0.9; }
         }
         .gradient-quote::after {
             content: "";
@@ -181,10 +302,18 @@
         }
         #workout-icon {
             box-shadow: 
-                0 12px 30px rgba(37, 99, 235, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                0 15px 40px rgba(168, 85, 247, 0.6),
+                0 8px 25px rgba(236, 72, 153, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, 
+                #a855f7 0%, 
+                #ec4899 100%);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(2deg); }
         }
         #workout-card button,
         #complete-set-btn,
@@ -229,34 +358,54 @@
             opacity: 1;
         }
         #exercise-tip {
-            border: 1px solid rgba(96, 165, 250, 0.35);
-            box-shadow: inset 0 0 20px rgba(37, 99, 235, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            box-shadow: inset 0 0 25px rgba(168, 85, 247, 0.15);
         }
         #rest-timer {
-            text-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);
+            text-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
         }
         #hiit-timer {
-            text-shadow: 0 10px 35px rgba(37, 99, 235, 0.4);
+            text-shadow: 0 10px 40px rgba(249, 115, 22, 0.6);
+            animation: timerPulse 2s ease-in-out infinite;
+        }
+        @keyframes timerPulse {
+            0%, 100% { text-shadow: 0 10px 40px rgba(249, 115, 22, 0.6); }
+            50% { text-shadow: 0 15px 50px rgba(249, 115, 22, 0.8); }
         }
         #hiit-timer-display {
-            transition: background 0.6s ease, box-shadow 0.6s ease;
-            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.45);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 25px 50px rgba(15, 23, 42, 0.5);
         }
         #hiit-status {
             letter-spacing: 0.35em;
         }
         #hiit-round {
             letter-spacing: 0.08em;
-            color: rgba(203, 213, 225, 0.8);
+            color: rgba(203, 213, 225, 0.9);
         }
         #hiit-timer-display.hiit-idle {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.9));
+            background: linear-gradient(135deg, 
+                rgba(30, 20, 50, 0.7), 
+                rgba(20, 15, 35, 0.85));
+            border-color: rgba(107, 114, 128, 0.5);
         }
         #hiit-timer-display.hiit-active {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(21, 128, 61, 0.5));
+            background: linear-gradient(135deg, 
+                rgba(249, 115, 22, 0.3), 
+                rgba(239, 68, 68, 0.5));
+            border-color: rgba(249, 115, 22, 0.6) !important;
+            box-shadow: 
+                0 25px 50px rgba(249, 115, 22, 0.4),
+                inset 0 0 60px rgba(249, 115, 22, 0.2);
         }
         #hiit-timer-display.hiit-rest {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.32));
+            background: linear-gradient(135deg, 
+                rgba(6, 182, 212, 0.25), 
+                rgba(59, 130, 246, 0.35));
+            border-color: rgba(6, 182, 212, 0.5) !important;
+            box-shadow: 
+                0 25px 50px rgba(6, 182, 212, 0.3),
+                inset 0 0 60px rgba(6, 182, 212, 0.15);
         }
         #today-screen header h1 {
             letter-spacing: -0.02em;
@@ -283,21 +432,21 @@
             text-transform: uppercase;
         }
         .workout-type-indicator {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
             animation: pulse-glow 2s ease-in-out infinite;
         }
         @keyframes pulse-glow {
             0%, 100% { 
-                box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
                 transform: scale(1);
             }
             50% { 
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.9);
-                transform: scale(1.1);
+                box-shadow: 0 0 25px rgba(236, 72, 153, 1);
+                transform: scale(1.2);
             }
         }
         .exercise-card-number {
@@ -326,7 +475,7 @@
         <div id="today-screen" class="p-6 space-y-6">
             <header class="mb-8">
                 <h1 class="text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Hello!
+                    Hello Sai!
                 </h1>
                 <p class="text-gray-400 text-base font-medium" id="current-date">Let's get stronger today.</p>
             </header>
@@ -342,13 +491,17 @@
                                 <span class="workout-type-indicator"></span>
                                 <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Today's Focus</p>
                             </div>
-                            <h2 id="workout-title" class="text-2xl font-extrabold mb-1">Workout A</h2>
-                            <p id="workout-subtitle" class="text-gray-300 text-sm font-medium">Push & Squat Focus</p>
+                            <h2 id="workout-title" class="text-3xl font-extrabold mb-1 bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">Workout A</h2>
+                            <p id="workout-subtitle" class="text-gray-300 text-sm font-semibold">Push & Squat Focus</p>
+                            <div class="mt-2">
+                                <span id="progress-week-badge" class="modern-badge animate-pulse">Week 1</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button id="start-workout-btn" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-5 rounded-2xl text-lg touch-active transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                    Start Workout
+                <button id="start-workout-btn" class="relative w-full bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:via-pink-700 hover:to-rose-700 text-white font-bold py-6 rounded-2xl text-xl touch-active transition-all duration-300 shadow-[0_0_40px_rgba(168,85,247,0.5)] hover:shadow-[0_0_60px_rgba(168,85,247,0.7)] transform hover:scale-[1.02] overflow-hidden group">
+                    <span class="relative z-10">Start Workout 💪</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </button>
             </div>
             
@@ -364,19 +517,19 @@
 
             <!-- Stats Card -->
             <div class="app-card rounded-3xl p-6 space-y-4 fade-in transition duration-300 transform hover:-translate-y-1">
-                <h3 class="font-extrabold text-xl mb-2">Your Progress</h3>
+                <h3 class="font-extrabold text-2xl mb-3 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Your Progress</h3>
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
-                        <p class="text-4xl font-extrabold text-blue-400 stat-value mb-1" id="workout-streak">0</p>
-                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Day Streak</p>
+                    <div class="text-center bg-gradient-to-br from-cyan-500/15 to-blue-500/15 rounded-xl p-4 border border-cyan-500/30 backdrop-blur-sm transform hover:scale-105 transition-transform duration-200">
+                        <p class="text-4xl font-extrabold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent stat-value mb-1" id="workout-streak">0</p>
+                        <p class="text-xs text-gray-300 font-bold uppercase tracking-wide">Day Streak</p>
                     </div>
-                    <div class="text-center bg-green-500/10 rounded-xl p-4 border border-green-500/20">
-                        <p class="text-4xl font-extrabold text-green-400 stat-value mb-1" id="total-workouts">0</p>
-                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Workouts</p>
+                    <div class="text-center bg-gradient-to-br from-emerald-500/15 to-green-500/15 rounded-xl p-4 border border-emerald-500/30 backdrop-blur-sm transform hover:scale-105 transition-transform duration-200">
+                        <p class="text-4xl font-extrabold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent stat-value mb-1" id="total-workouts">0</p>
+                        <p class="text-xs text-gray-300 font-bold uppercase tracking-wide">Workouts</p>
                     </div>
-                    <div class="text-center bg-purple-500/10 rounded-xl p-4 border border-purple-500/20">
-                        <p class="text-4xl font-extrabold text-purple-400 stat-value mb-1" id="this-week">0</p>
-                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">This Week</p>
+                    <div class="text-center bg-gradient-to-br from-purple-500/15 to-pink-500/15 rounded-xl p-4 border border-purple-500/30 backdrop-blur-sm transform hover:scale-105 transition-transform duration-200">
+                        <p class="text-4xl font-extrabold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent stat-value mb-1" id="this-week">0</p>
+                        <p class="text-xs text-gray-300 font-bold uppercase tracking-wide">This Week</p>
                     </div>
                 </div>
             </div>
@@ -428,19 +581,27 @@
                 <p id="current-reps" class="text-blue-400 text-xl font-bold">8 - 12 Reps</p>
             </div>
 
-            <button id="complete-set-btn" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-2xl text-lg touch-active transition-all duration-200 shadow-lg hover:shadow-xl">Complete Set</button>
+            <button id="complete-set-btn" class="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:via-pink-700 hover:to-rose-700 text-white font-bold py-5 rounded-2xl text-lg touch-active transition-all duration-300 shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] transform hover:scale-[1.02]">Complete Set</button>
 
-            <div id="rest-timer-view" class="app-card hidden text-center fade-in mt-4 p-6 rounded-3xl">
-                <p class="text-base text-green-400 font-bold uppercase tracking-wider mb-3">REST</p>
-                <p id="rest-timer" class="text-6xl font-extrabold my-3">60</p>
+            <div id="rest-timer-view" class="app-card hidden text-center fade-in mt-4 p-6 rounded-3xl border-2 border-emerald-500/30">
+                <p class="text-base text-emerald-400 font-bold uppercase tracking-wider mb-3 animate-pulse">REST</p>
+                <p id="rest-timer" class="text-7xl font-extrabold my-4 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">60</p>
+                
+                <!-- Next Exercise Preview -->
+                <div id="next-exercise-preview" class="mt-4 mb-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-4 hidden backdrop-blur-sm scale-in">
+                    <p class="text-xs text-gray-300 font-semibold uppercase tracking-wide mb-2">Up Next</p>
+                    <p id="next-exercise-name" class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 font-bold text-base"></p>
+                </div>
+                
                 <div class="flex justify-center gap-3 mt-4">
-                    <button id="skip-rest-btn" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-xl touch-active transition-all duration-200 font-semibold">Skip</button>
-                    <button id="add-time-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl touch-active transition-all duration-200 font-semibold">+15s</button>
+                    <button id="reduce-time-btn" class="bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-3 rounded-xl touch-active transition-all duration-200 font-semibold shadow-lg">-15s</button>
+                    <button id="skip-rest-btn" class="bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 rounded-xl touch-active transition-all duration-200 font-semibold shadow-lg">Skip</button>
+                    <button id="add-time-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-xl touch-active transition-all duration-200 font-semibold shadow-[0_0_20px_rgba(168,85,247,0.4)]">+15s</button>
                 </div>
             </div>
             
-            <button id="next-exercise-btn" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-2xl text-md touch-active transition-all duration-200 mt-4 hidden shadow-lg">Next Exercise</button>
-            <button id="finish-workout-btn" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 rounded-2xl text-lg touch-active transition-all duration-200 hidden mt-4 shadow-lg hover:shadow-xl">Finish Workout</button>
+            <button id="next-exercise-btn" class="w-full bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-4 rounded-2xl text-lg touch-active transition-all duration-200 mt-4 hidden shadow-lg transform hover:scale-[1.02]">Next Exercise →</button>
+            <button id="finish-workout-btn" class="w-full bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 hover:from-emerald-700 hover:via-green-700 hover:to-teal-700 text-white font-bold py-5 rounded-2xl text-xl touch-active transition-all duration-300 hidden mt-4 shadow-[0_0_40px_rgba(16,185,129,0.5)] hover:shadow-[0_0_60px_rgba(16,185,129,0.7)] transform hover:scale-[1.02]">Finish Workout ✨</button>
         </div>
         
         <!-- Workout Complete Screen -->
@@ -452,35 +613,74 @@
             <p class="text-gray-300 max-w-sm font-medium text-lg">Amazing work. You've pushed your limits. Now remember to refuel with protein and get a good night's sleep.</p>
             <div class="app-card rounded-3xl p-6 max-w-sm w-full mt-4 transition duration-300 transform hover:-translate-y-1">
                 <p class="text-sm text-gray-400 mb-4 font-semibold uppercase tracking-wider">Session Summary</p>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
-                        <p class="text-3xl font-extrabold text-blue-400 stat-value mb-1" id="session-exercises">8</p>
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-blue-500/10 rounded-xl p-3 border border-blue-500/20">
+                        <p class="text-2xl font-extrabold text-blue-400 stat-value mb-1" id="session-exercises">8</p>
                         <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Exercises</p>
                     </div>
-                    <div class="bg-green-500/10 rounded-xl p-4 border border-green-500/20">
-                        <p class="text-3xl font-extrabold text-green-400 stat-value mb-1" id="session-sets">24</p>
+                    <div class="bg-green-500/10 rounded-xl p-3 border border-green-500/20">
+                        <p class="text-2xl font-extrabold text-green-400 stat-value mb-1" id="session-sets">24</p>
                         <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Sets</p>
+                    </div>
+                    <div class="bg-purple-500/10 rounded-xl p-3 border border-purple-500/20">
+                        <p class="text-2xl font-extrabold text-purple-400 stat-value mb-1" id="session-duration">0:00</p>
+                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Duration</p>
                     </div>
                 </div>
             </div>
-            <button id="go-home-btn" class="w-full max-w-sm bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-2xl text-lg touch-active transition-all duration-200 mt-6 shadow-lg hover:shadow-xl">Back to Home</button>
+            <button id="go-home-btn" class="w-full max-w-sm bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:via-pink-700 hover:to-rose-700 text-white font-bold py-5 rounded-2xl text-lg touch-active transition-all duration-300 mt-6 shadow-[0_0_40px_rgba(168,85,247,0.5)] hover:shadow-[0_0_60px_rgba(168,85,247,0.7)] transform hover:scale-[1.02]">Back to Home 🏠</button>
         </div>
 
 
         <!-- HIIT Timer Screen -->
-        <div id="hiit-screen" class="hidden p-6 flex flex-col justify-between h-full">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-extrabold mb-2">HIIT Finisher</h2>
-                <p class="text-gray-400 font-medium">15 Minutes to incinerate fat.</p>
+        <div id="hiit-screen" class="hidden p-6 flex flex-col h-full space-y-4">
+            <div class="text-center mb-2">
+                <h2 class="text-4xl font-extrabold mb-2 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent">HIIT Finisher</h2>
+                <p class="text-gray-300 font-semibold text-sm">🔥 15 Minutes to incinerate fat</p>
             </div>
-            <div id="hiit-timer-display" class="app-card flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-3xl hiit-idle">
-                 <p id="hiit-status" class="text-3xl font-extrabold tracking-widest uppercase text-gray-400 mb-6">GET READY</p>
-                 <p id="hiit-timer" class="text-9xl font-extrabold my-4">10</p>
-                 <p id="hiit-round" class="text-lg text-gray-300 font-semibold mt-4">Round 1 / 10</p>
+            
+            <div id="hiit-timer-display" class="app-card flex flex-col items-center justify-center flex-grow transition-all duration-500 rounded-3xl hiit-idle border-2 border-gray-600/50 relative overflow-hidden">
+                 <!-- Animated background circles -->
+                 <div class="absolute inset-0 opacity-20">
+                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-r from-orange-500 to-red-500 blur-3xl animate-pulse"></div>
+                 </div>
+                 
+                 <p id="hiit-status" class="text-3xl font-extrabold tracking-widest uppercase text-gray-300 mb-6 relative z-10">GET READY</p>
+                 <p id="hiit-timer" class="text-9xl font-extrabold my-4 relative z-10 tabular-nums">10</p>
+                 <p id="hiit-round" class="text-lg text-gray-300 font-semibold mt-4 relative z-10">Round 1 / 10</p>
             </div>
-            <div class="grid grid-cols-3 gap-4 pt-6">
-                <button id="hiit-reset-btn" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-2xl flex justify-center items-center touch-active transition-all duration-200"><i data-lucide="rotate-cw"></i></button>
-                <button id="hiit-start-pause-btn" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 col-span-2 p-4 rounded-2xl flex justify-center items-center touch-active text-lg font-bold space-x-2 shadow-lg transition-all duration-200">
+            
+            <!-- Volume Control (moved to bottom section) -->
+            <div class="app-card rounded-2xl p-4">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                    <i data-lucide="volume-2" class="text-purple-400 w-5 h-5"></i>
+                    <span class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Volume</span>
+                    <span id="volume-label" class="text-sm text-purple-400 font-bold">30%</span>
+                </div>
+                <input type="range" id="hiit-volume" min="0" max="100" value="30" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+            </div>
+            
+            <!-- HIIT Stats/Info Cards -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="app-card rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-400 font-semibold uppercase mb-1">Sprint</p>
+                    <p class="text-xl font-extrabold text-orange-400">30s</p>
+                </div>
+                <div class="app-card rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-400 font-semibold uppercase mb-1">Rest</p>
+                    <p class="text-xl font-extrabold text-cyan-400">60s</p>
+                </div>
+                <div class="app-card rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-400 font-semibold uppercase mb-1">Rounds</p>
+                    <p class="text-xl font-extrabold text-pink-400">10</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4">
+                <button id="hiit-reset-btn" class="bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 p-4 rounded-2xl flex justify-center items-center touch-active transition-all duration-200 shadow-lg">
+                    <i data-lucide="rotate-cw"></i>
+                </button>
+                <button id="hiit-start-pause-btn" class="bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 hover:from-orange-700 hover:via-red-700 hover:to-pink-700 col-span-2 p-4 rounded-2xl flex justify-center items-center touch-active text-lg font-bold space-x-2 shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all duration-200 transform hover:scale-[1.02]">
                     <i data-lucide="play"></i>
                     <span>Start</span>
                 </button>
@@ -661,9 +861,24 @@
                 restTimeLeft: 60,
                 remindersEnabled: JSON.parse(localStorage.getItem('remindersEnabled')) || false,
                 workoutHistory: JSON.parse(localStorage.getItem('workoutHistory')) || [],
-                showExerciseTip: false
+                showExerciseTip: false,
+                workoutStartTime: null,
+                workoutDuration: 0,
+                startWeek: localStorage.getItem('startWeek') || null,
+                wakeLock: null
             };
-            let hiitState = { timer: null, running: false, mode: 'prep', timeLeft: 10, totalRounds: 10, currentRound: 1, sprintDuration: 30, restDuration: 60, prepDuration: 10 };
+            let hiitState = { 
+                timer: null, 
+                running: false, 
+                mode: 'prep', 
+                timeLeft: 10, 
+                totalRounds: 10, 
+                currentRound: 1, 
+                sprintDuration: 30, 
+                restDuration: 60, 
+                prepDuration: 10,
+                volume: parseFloat(localStorage.getItem('hiitVolume')) || 0.3
+            };
             
             const screens = document.querySelectorAll('main > div');
             const navBtns = document.querySelectorAll('.nav-btn');
@@ -693,6 +908,13 @@
             const hiitRoundEl = document.getElementById('hiit-round');
             const hiitStartPauseBtn = document.getElementById('hiit-start-pause-btn');
             const hiitResetBtn = document.getElementById('hiit-reset-btn');
+            const hiitVolumeSlider = document.getElementById('hiit-volume');
+            const volumeLabel = document.getElementById('volume-label');
+            const nextExercisePreview = document.getElementById('next-exercise-preview');
+            const nextExerciseName = document.getElementById('next-exercise-name');
+            const reduceTimeBtn = document.getElementById('reduce-time-btn');
+            const sessionDurationEl = document.getElementById('session-duration');
+            const progressWeekBadge = document.getElementById('progress-week-badge');
             const backToHomeBtn = document.getElementById('back-to-home-btn');
             const exerciseInfoBtn = document.getElementById('exercise-info-btn');
             const exerciseTip = document.getElementById('exercise-tip');
@@ -711,6 +933,47 @@
             const sessionExercisesEl = document.getElementById('session-exercises');
             const sessionSetsEl = document.getElementById('session-sets');
             
+            // Calculate weeks since start for progressive overload
+            function getWeeksSinceStart() {
+                if (!state.startWeek) {
+                    const now = new Date();
+                    state.startWeek = now.toISOString().slice(0, 10);
+                    localStorage.setItem('startWeek', state.startWeek);
+                    return 0;
+                }
+                const start = new Date(state.startWeek);
+                const now = new Date();
+                const diffTime = Math.abs(now - start);
+                const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+                return diffWeeks;
+            }
+
+            // Apply progressive overload to reps
+            function getProgressiveReps(baseReps) {
+                const weeks = getWeeksSinceStart();
+                const match = baseReps.match(/(\d+)-(\d+)/);
+                if (match) {
+                    const min = parseInt(match[1]) + weeks;
+                    const max = parseInt(match[2]) + weeks;
+                    return `${min}-${max}`;
+                }
+                // Handle "X per leg/arm" format
+                const perLegMatch = baseReps.match(/(\d+)-(\d+)\s+per\s+(leg|arm)/);
+                if (perLegMatch) {
+                    const min = parseInt(perLegMatch[1]) + weeks;
+                    const max = parseInt(perLegMatch[2]) + weeks;
+                    return `${min}-${max} per ${perLegMatch[3]}`;
+                }
+                // Handle time-based (seconds)
+                const timeMatch = baseReps.match(/(\d+)-(\d+)\s+sec/);
+                if (timeMatch) {
+                    const min = parseInt(timeMatch[1]) + (weeks * 5);
+                    const max = parseInt(timeMatch[2]) + (weeks * 5);
+                    return `${min}-${max} sec`;
+                }
+                return baseReps;
+            }
+
             function determineTodaysWorkout() {
                 const today = new Date().toISOString().slice(0, 10);
                 const todayDay = new Date().getDay();
@@ -737,10 +1000,31 @@
                 }
             }
 
+            async function requestWakeLock() {
+                try {
+                    if ('wakeLock' in navigator) {
+                        state.wakeLock = await navigator.wakeLock.request('screen');
+                        console.log('Wake Lock activated');
+                    }
+                } catch (err) {
+                    console.log('Wake Lock error:', err);
+                }
+            }
+
+            function releaseWakeLock() {
+                if (state.wakeLock) {
+                    state.wakeLock.release();
+                    state.wakeLock = null;
+                    console.log('Wake Lock released');
+                }
+            }
+
             function startWorkout() {
                 state.workoutInProgress = true;
                 state.currentExerciseIndex = 0;
                 state.currentSet = 1;
+                state.workoutStartTime = Date.now();
+                requestWakeLock();
                 renderCurrentExercise();
                 showScreen('workout-screen');
             }
@@ -754,8 +1038,10 @@
                 }
                 const exercise = fullWorkoutList[state.currentExerciseIndex];
                 const isCore = state.currentExerciseIndex >= workout.exercises.length;
+                const progressiveReps = getProgressiveReps(exercise.reps);
+                
                 currentExerciseTitle.textContent = exercise.name + (isCore ? " (Core)" : "");
-                currentRepsEl.textContent = `${exercise.reps} Reps`;
+                currentRepsEl.textContent = `${progressiveReps} Reps`;
                 currentSetEl.textContent = `${state.currentSet} / ${exercise.sets}`;
                 const progress = (state.currentExerciseIndex + 1) / fullWorkoutList.length;
                 progressBar.style.width = `${progress * 100}%`;
@@ -771,6 +1057,11 @@
                     exerciseTipText.textContent = exercise.tip;
                 } else {
                     exerciseTip.classList.add('hidden');
+                }
+                
+                // Haptic feedback
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50);
                 }
             }
 
@@ -807,14 +1098,43 @@
                 restTimerView.classList.remove('hidden');
                 state.restTimeLeft = duration;
                 restTimerEl.textContent = state.restTimeLeft;
+                
+                // Show next exercise preview if available
+                const workout = state.todaysWorkout;
+                const fullWorkoutList = [...workout.exercises, ...workout.core];
+                if (state.currentExerciseIndex < fullWorkoutList.length) {
+                    const nextEx = fullWorkoutList[state.currentExerciseIndex];
+                    const isCore = state.currentExerciseIndex >= workout.exercises.length;
+                    nextExerciseName.textContent = nextEx.name + (isCore ? " (Core)" : "");
+                    nextExercisePreview.classList.remove('hidden');
+                } else {
+                    nextExercisePreview.classList.add('hidden');
+                }
+                
                 clearInterval(state.restTimerInterval);
                 state.restTimerInterval = setInterval(() => {
                     state.restTimeLeft--;
                     restTimerEl.textContent = state.restTimeLeft;
+                    
+                    // Visual feedback for last 3 seconds
+                    restTimerEl.classList.remove('countdown-pulse', 'countdown-urgent');
+                    if (state.restTimeLeft === 3) {
+                        restTimerEl.classList.add('countdown-pulse');
+                        if ('vibrate' in navigator) navigator.vibrate(100);
+                        playBeep(1);
+                    } else if (state.restTimeLeft <= 2 && state.restTimeLeft > 0) {
+                        restTimerEl.classList.add('countdown-urgent');
+                        if ('vibrate' in navigator) navigator.vibrate(100);
+                        playBeep(1);
+                    }
+                    
                     if (state.restTimeLeft <= 0) {
                         clearInterval(state.restTimerInterval);
+                        restTimerEl.classList.remove('countdown-pulse', 'countdown-urgent');
                         restTimerView.classList.add('hidden');
-                        renderCurrentExercise();
+                        if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
+                        playBeep(2);
+                        renderCurrentExercise(); // Auto-advance
                     }
                 }, 1000);
             }
@@ -822,22 +1142,46 @@
             function addRestTime() {
                 state.restTimeLeft += 15;
                 restTimerEl.textContent = state.restTimeLeft;
+                restTimerEl.classList.remove('countdown-pulse', 'countdown-urgent');
                 addTimeBtn.classList.add('pulse');
                 setTimeout(() => addTimeBtn.classList.remove('pulse'), 500);
+                if ('vibrate' in navigator) navigator.vibrate(50);
+            }
+
+            function reduceRestTime() {
+                state.restTimeLeft = Math.max(0, state.restTimeLeft - 15);
+                restTimerEl.textContent = state.restTimeLeft;
+                restTimerEl.classList.remove('countdown-pulse', 'countdown-urgent');
+                reduceTimeBtn.classList.add('pulse');
+                setTimeout(() => reduceTimeBtn.classList.remove('pulse'), 500);
+                if ('vibrate' in navigator) navigator.vibrate(50);
             }
 
             function skipRest() {
                 clearInterval(state.restTimerInterval);
+                restTimerEl.classList.remove('countdown-pulse', 'countdown-urgent');
                 restTimerView.classList.add('hidden');
+                if ('vibrate' in navigator) navigator.vibrate(50);
                 renderCurrentExercise();
             }
 
             function finishWorkout() {
                 state.workoutInProgress = false;
+                releaseWakeLock();
+                
                 state.lastWorkoutType = state.todaysWorkout === WORKOUTS.A ? 'A' : 'B';
                 state.lastWorkoutDate = new Date().toISOString().slice(0, 10);
                 localStorage.setItem('lastWorkoutType', state.lastWorkoutType);
                 localStorage.setItem('lastWorkoutDate', state.lastWorkoutDate);
+                
+                // Calculate workout duration
+                if (state.workoutStartTime) {
+                    state.workoutDuration = Math.floor((Date.now() - state.workoutStartTime) / 1000 / 60);
+                    const minutes = state.workoutDuration;
+                    const hours = Math.floor(minutes / 60);
+                    const mins = minutes % 60;
+                    sessionDurationEl.textContent = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+                }
                 
                 // Calculate session stats
                 const workout = state.todaysWorkout;
@@ -845,6 +1189,11 @@
                 const totalSets = [...workout.exercises, ...workout.core].reduce((sum, ex) => sum + ex.sets, 0);
                 sessionExercisesEl.textContent = totalExercises;
                 sessionSetsEl.textContent = totalSets;
+                
+                // Haptic feedback
+                if ('vibrate' in navigator) {
+                    navigator.vibrate([200, 100, 200, 100, 400]);
+                }
                 
                 // Save workout to history
                 state.workoutHistory.push({
@@ -876,7 +1225,18 @@
                 reminderTime.setHours(20, 0, 0, 0); // 8:00 PM
                 if (now < reminderTime) {
                     const timeout = reminderTime.getTime() - now.getTime();
-                    setTimeout(() => { new Notification("Time to Train!", { body: `Let's crush ${state.todaysWorkout.title} today. You've got this!` }); }, timeout);
+                    setTimeout(() => { 
+                        const notification = new Notification("Time to Train!", { 
+                            body: `Let's crush ${state.todaysWorkout.title} today. You've got this!`,
+                            tag: 'workout-reminder',
+                            requireInteraction: false
+                        });
+                        notification.onclick = function() {
+                            window.focus();
+                            startWorkout();
+                            notification.close();
+                        };
+                    }, timeout);
                 }
             }
 
@@ -893,8 +1253,9 @@
             }
 
             function playBeep(count = 1) {
-                // Simple audio feedback using Web Audio API
+                // Simple audio feedback using Web Audio API with volume control
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const volume = hiitState.volume;
                 for (let i = 0; i < count; i++) {
                     setTimeout(() => {
                         const oscillator = audioContext.createOscillator();
@@ -903,12 +1264,18 @@
                         gainNode.connect(audioContext.destination);
                         oscillator.frequency.value = count > 1 ? 880 : 440;
                         oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
                         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
                         oscillator.start(audioContext.currentTime);
                         oscillator.stop(audioContext.currentTime + 0.1);
                     }, i * 150);
                 }
+            }
+
+            function updateVolume() {
+                hiitState.volume = parseFloat(hiitVolumeSlider.value) / 100;
+                volumeLabel.textContent = hiitVolumeSlider.value + '%';
+                localStorage.setItem('hiitVolume', hiitState.volume);
             }
 
             function hiitTick() {
@@ -1066,6 +1433,10 @@
                 const randomQuote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
                 motivationalQuote.textContent = `"${randomQuote}"`;
                 
+                // Initialize HIIT volume slider
+                hiitVolumeSlider.value = hiitState.volume * 100;
+                volumeLabel.textContent = Math.round(hiitState.volume * 100) + '%';
+                
                 // Calculate and display stats
                 calculateStats();
                 
@@ -1075,6 +1446,14 @@
                     workoutTitle.textContent = state.todaysWorkout.title;
                     workoutSubtitle.textContent = state.todaysWorkout.subtitle;
                     workoutIconContainer.innerHTML = `<i data-lucide="${state.todaysWorkout.icon}"></i>`;
+                    
+                    // Show progressive overload week
+                    const currentWeek = getWeeksSinceStart() + 1;
+                    if (progressWeekBadge) {
+                        progressWeekBadge.textContent = `Week ${currentWeek} 💪`;
+                        progressWeekBadge.title = `You've been training for ${currentWeek} week${currentWeek > 1 ? 's' : ''}! Reps increase by +${getWeeksSinceStart()} this week.`;
+                    }
+                    
                     lucide.createIcons();
                 } else {
                     workoutCard.classList.add('hidden');
@@ -1098,11 +1477,16 @@
                 nextExerciseBtn.addEventListener('click', handleNextExercise);
                 finishWorkoutBtn.addEventListener('click', finishWorkout);
                 skipRestBtn.addEventListener('click', skipRest);
+                reduceTimeBtn.addEventListener('click', reduceRestTime);
+                addTimeBtn.addEventListener('click', addRestTime);
                 hiitStartPauseBtn.addEventListener('click', toggleHiit);
                 hiitResetBtn.addEventListener('click', resetHiit);
+                hiitVolumeSlider.addEventListener('input', updateVolume);
                 backToHomeBtn.addEventListener('click', () => {
                     if (confirm('Are you sure you want to quit this workout?')) {
                         state.workoutInProgress = false;
+                        releaseWakeLock();
+                        clearInterval(state.restTimerInterval);
                         init();
                         showScreen('today-screen');
                     }
@@ -1112,7 +1496,6 @@
                     renderCurrentExercise();
                 });
                 clearHistoryBtn.addEventListener('click', clearHistory);
-                addTimeBtn.addEventListener('click', addRestTime);
             }
 
             attachEventListeners();
