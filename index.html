@@ -1059,10 +1059,34 @@
 
             function determineTodaysWorkout() {
                 const today = new Date().toISOString().slice(0, 10);
-                const todayDay = new Date().getDay();
+                const todayDay = new Date().getDay(); // 0=Sunday, 1=Monday, etc.
+                
+                // Check if already worked out today
                 if (state.lastWorkoutDate === today) return null;
+                
+                // Mon, Wed, Fri are workout days
                 const isWorkoutDay = [1, 3, 5].includes(todayDay);
                 if (!isWorkoutDay) return null;
+                
+                // Schedule: Mon-A, Wed-B, Fri-A, then next Mon-B, Wed-A, Fri-B, etc.
+                // Determine which workout based on the cycle
+                if (!state.lastWorkoutType || !state.lastWorkoutDate) {
+                    // First ever workout - start with A
+                    return WORKOUTS['A'];
+                }
+                
+                // Get the last workout info
+                const lastDate = new Date(state.lastWorkoutDate);
+                const lastDay = lastDate.getDay();
+                const daysDiff = Math.floor((new Date(today) - lastDate) / (1000 * 60 * 60 * 24));
+                
+                // If it's been more than a week, continue the alternating pattern
+                if (daysDiff > 7) {
+                    const nextType = state.lastWorkoutType === 'A' ? 'B' : 'A';
+                    return WORKOUTS[nextType];
+                }
+                
+                // Normal weekly cycle: alternate A and B
                 const nextType = state.lastWorkoutType === 'A' ? 'B' : 'A';
                 return WORKOUTS[nextType];
             }
@@ -1103,6 +1127,10 @@
             }
 
             function startWorkout() {
+                if (!state.todaysWorkout) {
+                    alert('No workout scheduled for today!');
+                    return;
+                }
                 state.workoutInProgress = true;
                 state.currentExerciseIndex = 0;
                 state.currentSet = 1;
@@ -1566,24 +1594,22 @@
 
             // Workout Preview Toggle
             function toggleWorkoutPreview() {
-                const previewContent = document.getElementById('preview-content');
-                const chevron = document.getElementById('preview-chevron');
+                if (!previewContent || !previewChevron) return;
                 
                 if (previewContent.classList.contains('hidden')) {
                     previewContent.classList.remove('hidden');
-                    chevron.style.transform = 'rotate(180deg)';
+                    previewChevron.style.transform = 'rotate(180deg)';
                 } else {
                     previewContent.classList.add('hidden');
-                    chevron.style.transform = 'rotate(0deg)';
+                    previewChevron.style.transform = 'rotate(0deg)';
                 }
             }
 
             // Render Workout Preview
             function renderWorkoutPreview() {
-                const previewContent = document.getElementById('preview-content');
                 const workout = state.todaysWorkout;
                 
-                if (!workout) return;
+                if (!workout || !previewContent) return;
                 
                 const allExercises = [...workout.exercises, ...workout.core];
                 const exerciseIcons = {
