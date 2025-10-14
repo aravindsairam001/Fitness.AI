@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Theme color for PWA -->
+    <meta name="theme-color" content="#111827"/>
+    <title>AI Workout Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .touch-active:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+        .progress-bar-inner {
+            transition: width 0.5s ease-in-out;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex flex-col h-screen antialiased">
+
+    <!-- Main Content -->
+    <main class="flex-grow overflow-y-auto pb-20">
+        <!-- Today Screen -->
+        <div id="today-screen" class="p-6 space-y-6">
+            <header>
+                <h1 class="text-3xl font-bold tracking-tight">Hello!</h1>
+                <p class="text-gray-400" id="current-date">Let's get stronger today.</p>
+            </header>
+
+            <div id="workout-card" class="bg-gray-800 rounded-2xl p-6 space-y-4 shadow-lg fade-in">
+                 <div class="flex items-center space-x-4">
+                    <div id="workout-icon" class="bg-blue-600 p-3 rounded-full">
+                        <!-- Icon will be inserted here -->
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Today's Focus</p>
+                        <h2 id="workout-title" class="text-2xl font-bold">Workout A</h2>
+                        <p id="workout-subtitle" class="text-gray-300">Push & Squat Focus</p>
+                    </div>
+                </div>
+                <button id="start-workout-btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-lg touch-active transition-all duration-200 hover:bg-blue-700">
+                    Start Workout
+                </button>
+            </div>
+            
+            <div id="rest-day-card" class="bg-gray-800 rounded-2xl p-6 text-center space-y-3 shadow-lg hidden fade-in">
+                <div class="flex justify-center">
+                    <div class="bg-green-600 p-3 rounded-full">
+                        <i data-lucide="bed-double"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold">Rest Day</h2>
+                <p class="text-gray-300">Your muscles grow when you rest. Stay hydrated and eat well.</p>
+            </div>
+
+            <div class="bg-gray-800 rounded-2xl p-5 shadow-lg space-y-3 fade-in">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-lg">Workout Reminders</h3>
+                        <p class="text-gray-400 text-sm">Get a nudge at 8:00 PM.</p>
+                    </div>
+                    <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" name="toggle" id="reminder-toggle" class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                        <label for="reminder-toggle" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-600 cursor-pointer"></label>
+                    </div>
+                    <style>.toggle-checkbox:checked { right: 0; border-color: #2563EB; } .toggle-checkbox:checked + .toggle-label { background-color: #2563EB; }</style>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workout Screen -->
+        <div id="workout-screen" class="hidden p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 id="current-exercise-title" class="text-2xl font-bold">Goblet Squats</h2>
+                <p id="progress-text" class="text-gray-400 font-medium">1 / 8</p>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full progress-bar-inner" style="width: 10%"></div>
+            </div>
+
+            <div class="text-center bg-gray-800 rounded-2xl p-8 my-4 fade-in">
+                <p class="text-gray-400 text-lg">Current Set</p>
+                <p id="current-set" class="text-7xl font-extrabold my-2">1 / 3</p>
+                <p id="current-reps" class="text-blue-400 text-xl font-semibold">8 - 12 Reps</p>
+            </div>
+
+            <button id="complete-set-btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-lg touch-active transition-all duration-200">Complete Set</button>
+
+            <div id="rest-timer-view" class="hidden text-center fade-in">
+                <p class="text-lg text-green-400 font-bold">REST</p>
+                <p id="rest-timer" class="text-6xl font-extrabold my-2">60</p>
+                <button id="skip-rest-btn" class="bg-gray-700 text-white px-6 py-2 rounded-lg touch-active transition-all duration-200">Skip</button>
+            </div>
+            
+            <button id="next-exercise-btn" class="w-full bg-gray-700 text-white font-bold py-3 rounded-xl text-md touch-active transition-all duration-200 mt-4 hidden">Next Exercise</button>
+            <button id="finish-workout-btn" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-lg touch-active transition-all duration-200 hidden mt-4">Finish Workout</button>
+        </div>
+        
+        <!-- Workout Complete Screen -->
+        <div id="workout-complete-screen" class="hidden p-8 flex flex-col items-center justify-center text-center space-y-4 h-full">
+            <i data-lucide="party-popper" class="text-yellow-400" size="64"></i>
+            <h2 class="text-3xl font-bold">Workout Complete!</h2>
+            <p class="text-gray-300 max-w-sm">Amazing work. You've pushed your limits. Now remember to refuel with protein and get a good night's sleep.</p>
+            <button id="go-home-btn" class="w-full max-w-sm bg-blue-600 text-white font-bold py-4 rounded-xl text-lg touch-active transition-all duration-200 mt-6">Back to Home</button>
+        </div>
+
+
+        <!-- HIIT Timer Screen -->
+        <div id="hiit-screen" class="hidden p-6 flex flex-col justify-between h-full">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold">HIIT Finisher</h2>
+                <p class="text-gray-400">15 Minutes to incinerate fat.</p>
+            </div>
+            <div id="hiit-timer-display" class="flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-2xl bg-gray-800">
+                 <p id="hiit-status" class="text-3xl font-bold tracking-widest uppercase text-gray-400">GET READY</p>
+                 <p id="hiit-timer" class="text-9xl font-extrabold my-2">10</p>
+                 <p id="hiit-round" class="text-lg text-gray-300">Round 1 / 10</p>
+            </div>
+            <div class="grid grid-cols-3 gap-4 pt-6">
+                <button id="hiit-reset-btn" class="bg-gray-700 p-4 rounded-2xl flex justify-center items-center touch-active"><i data-lucide="rotate-cw"></i></button>
+                <button id="hiit-start-pause-btn" class="bg-blue-600 col-span-2 p-4 rounded-2xl flex justify-center items-center touch-active text-lg font-bold space-x-2">
+                    <i data-lucide="play"></i>
+                    <span>Start</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Diet Screen -->
+        <div id="diet-screen" class="hidden p-6 space-y-4">
+            <h2 class="text-2xl font-bold">Diet Protocol</h2>
+            <p class="text-gray-400">Your diet is fixed, but your discipline isn't. Control what you can control.</p>
+            
+            <div class="space-y-3">
+                <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                    <i data-lucide="hand" class="text-blue-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold">Portion Control is #1</h3>
+                        <p class="text-gray-300 text-sm">Rice: 1 clenched fist. Veggies: Half your plate. Protein: Palm of your hand.</p>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                    <i data-lucide="egg" class="text-yellow-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold">Prioritize Protein</h3>
+                        <p class="text-gray-300 text-sm">Eat your chicken/eggs first. Have 2-3 eggs for breakfast daily. Consider a post-workout whey protein shake.</p>
+                    </div>
+                </div>
+                 <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                    <i data-lucide="glass-water" class="text-cyan-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold">Hydrate Aggressively</h3>
+                        <p class="text-gray-300 text-sm">Drink a large glass of water before each meal. Aim for 2-3 liters per day.</p>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                    <i data-lucide="zap-off" class="text-red-400 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold">Minimize Sauces & Oils</h3>
+                        <p class="text-gray-300 text-sm">Be mindful of hidden calories. If possible, ask for less sauce or drain excess oil.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 flex justify-around">
+        <button data-screen="today-screen" class="nav-btn flex-1 p-3 text-center text-blue-500">
+            <i data-lucide="home"></i>
+            <span class="text-xs block">Today</span>
+        </button>
+        <button data-screen="hiit-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
+            <i data-lucide="timer"></i>
+            <span class="text-xs block">HIIT Timer</span>
+        </button>
+        <button data-screen="diet-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
+            <i data-lucide="utensils-crossed"></i>
+            <span class="text-xs block">Diet</span>
+        </button>
+    </nav>
+    
+    <script>
+        // Register the service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
+        // --- All the application JavaScript from the previous step goes here ---
+        // (The JS code is identical to the previous version, just the sw.js path is changed above)
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            const WORKOUTS = {
+                A: { title: "Workout A", subtitle: "Push & Squat Focus", icon: "barbell", exercises: [{ name: "Goblet Squats", sets: 3, reps: "8-12" }, { name: "Dumbbell Bench Press", sets: 3, reps: "8-12" }, { name: "Overhead Press", sets: 3, reps: "8-12" }, { name: "Lunges", sets: 3, reps: "10-12 per leg" }, { name: "Tricep Pushdowns", sets: 2, reps: "12-15" }], core: [{ name: "Plank", sets: 3, reps: "45-60 sec" }, { name: "Lying Leg Raises", sets: 3, reps: "15-20" }, { name: "Russian Twists", sets: 3, reps: "20 total" }] },
+                B: { title: "Workout B", subtitle: "Pull & Hinge Focus", icon: "move-up", exercises: [{ name: "Romanian Deadlifts", sets: 3, reps: "8-12" }, { name: "Lat Pulldowns", sets: 3, reps: "8-12" }, { name: "Bent-Over Rows", sets: 3, reps: "10-12 per arm" }, { name: "Leg Press", sets: 3, reps: "10-15" }, { name: "Bicep Curls", sets: 2, reps: "12-15" }], core: [{ name: "Plank", sets: 3, reps: "45-60 sec" }, { name: "Lying Leg Raises", sets: 3, reps: "15-20" }, { name: "Russian Twists", sets: 3, reps: "20 total" }] }
+            };
+
+            let state = { currentScreen: 'today-screen', lastWorkoutType: localStorage.getItem('lastWorkoutType') || 'B', lastWorkoutDate: localStorage.getItem('lastWorkoutDate') || '', todaysWorkout: null, workoutInProgress: false, currentExerciseIndex: 0, currentSet: 1, restTimerInterval: null, remindersEnabled: JSON.parse(localStorage.getItem('remindersEnabled')) || false };
+            let hiitState = { timer: null, running: false, mode: 'prep', timeLeft: 10, totalRounds: 10, currentRound: 1, sprintDuration: 30, restDuration: 60, prepDuration: 10 };
+            
+            const screens = document.querySelectorAll('main > div');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const goHomeBtn = document.getElementById('go-home-btn');
+            const currentDateEl = document.getElementById('current-date');
+            const workoutCard = document.getElementById('workout-card');
+            const restDayCard = document.getElementById('rest-day-card');
+            const workoutTitle = document.getElementById('workout-title');
+            const workoutSubtitle = document.getElementById('workout-subtitle');
+            const workoutIconContainer = document.getElementById('workout-icon');
+            const startWorkoutBtn = document.getElementById('start-workout-btn');
+            const reminderToggle = document.getElementById('reminder-toggle');
+            const currentExerciseTitle = document.getElementById('current-exercise-title');
+            const progressText = document.getElementById('progress-text');
+            const progressBar = document.getElementById('progress-bar');
+            const currentSetEl = document.getElementById('current-set');
+            const currentRepsEl = document.getElementById('current-reps');
+            const completeSetBtn = document.getElementById('complete-set-btn');
+            const restTimerView = document.getElementById('rest-timer-view');
+            const restTimerEl = document.getElementById('rest-timer');
+            const skipRestBtn = document.getElementById('skip-rest-btn');
+            const nextExerciseBtn = document.getElementById('next-exercise-btn');
+            const finishWorkoutBtn = document.getElementById('finish-workout-btn');
+            const hiitTimerDisplay = document.getElementById('hiit-timer-display');
+            const hiitStatusEl = document.getElementById('hiit-status');
+            const hiitTimerEl = document.getElementById('hiit-timer');
+            const hiitRoundEl = document.getElementById('hiit-round');
+            const hiitStartPauseBtn = document.getElementById('hiit-start-pause-btn');
+            const hiitResetBtn = document.getElementById('hiit-reset-btn');
+            
+            function determineTodaysWorkout() {
+                const today = new Date().toISOString().slice(0, 10);
+                const todayDay = new Date().getDay();
+                if (state.lastWorkoutDate === today) return null;
+                const isWorkoutDay = [1, 3, 5].includes(todayDay);
+                if (!isWorkoutDay) return null;
+                const nextType = state.lastWorkoutType === 'A' ? 'B' : 'A';
+                return WORKOUTS[nextType];
+            }
+
+            function showScreen(screenId) {
+                screens.forEach(screen => screen.classList.toggle('hidden', screen.id !== screenId));
+                navBtns.forEach(btn => {
+                    const isActive = btn.dataset.screen === screenId;
+                    btn.classList.toggle('text-blue-500', isActive);
+                    btn.classList.toggle('text-gray-400', !isActive);
+                });
+                state.currentScreen = screenId;
+            }
+
+            function startWorkout() {
+                state.workoutInProgress = true;
+                state.currentExerciseIndex = 0;
+                state.currentSet = 1;
+                renderCurrentExercise();
+                showScreen('workout-screen');
+            }
+
+            function renderCurrentExercise() {
+                const workout = state.todaysWorkout;
+                const fullWorkoutList = [...workout.exercises, ...workout.core];
+                if (state.currentExerciseIndex >= fullWorkoutList.length) {
+                    finishWorkout();
+                    return;
+                }
+                const exercise = fullWorkoutList[state.currentExerciseIndex];
+                const isCore = state.currentExerciseIndex >= workout.exercises.length;
+                currentExerciseTitle.textContent = exercise.name + (isCore ? " (Core)" : "");
+                currentRepsEl.textContent = `${exercise.reps} Reps`;
+                currentSetEl.textContent = `${state.currentSet} / ${exercise.sets}`;
+                const progress = (state.currentExerciseIndex + 1) / fullWorkoutList.length;
+                progressBar.style.width = `${progress * 100}%`;
+                progressText.textContent = `${state.currentExerciseIndex + 1} / ${fullWorkoutList.length}`;
+                completeSetBtn.classList.remove('hidden');
+                restTimerView.classList.add('hidden');
+                nextExerciseBtn.classList.add('hidden');
+                finishWorkoutBtn.classList.add('hidden');
+            }
+
+            function handleCompleteSet() {
+                const workout = state.todaysWorkout;
+                const fullWorkoutList = [...workout.exercises, ...workout.core];
+                const exercise = fullWorkoutList[state.currentExerciseIndex];
+                if (state.currentSet < exercise.sets) {
+                    state.currentSet++;
+                    startRestTimer();
+                } else {
+                    if (state.currentExerciseIndex < fullWorkoutList.length - 1) {
+                        nextExerciseBtn.classList.remove('hidden');
+                    } else {
+                        finishWorkoutBtn.classList.remove('hidden');
+                    }
+                    completeSetBtn.classList.add('hidden');
+                }
+            }
+
+            function handleNextExercise() {
+                state.currentExerciseIndex++;
+                state.currentSet = 1;
+                renderCurrentExercise();
+            }
+
+            function startRestTimer(duration = 60) {
+                completeSetBtn.classList.add('hidden');
+                restTimerView.classList.remove('hidden');
+                let timeLeft = duration;
+                restTimerEl.textContent = timeLeft;
+                clearInterval(state.restTimerInterval);
+                state.restTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    restTimerEl.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(state.restTimerInterval);
+                        restTimerView.classList.add('hidden');
+                        renderCurrentExercise();
+                    }
+                }, 1000);
+            }
+
+            function skipRest() {
+                clearInterval(state.restTimerInterval);
+                restTimerView.classList.add('hidden');
+                renderCurrentExercise();
+            }
+
+            function finishWorkout() {
+                state.workoutInProgress = false;
+                state.lastWorkoutType = state.todaysWorkout === WORKOUTS.A ? 'A' : 'B';
+                state.lastWorkoutDate = new Date().toISOString().slice(0, 10);
+                localStorage.setItem('lastWorkoutType', state.lastWorkoutType);
+                localStorage.setItem('lastWorkoutDate', state.lastWorkoutDate);
+                showScreen('workout-complete-screen');
+            }
+
+            function setupReminders() {
+                reminderToggle.checked = state.remindersEnabled;
+            }
+
+            function handleReminderToggle() {
+                state.remindersEnabled = reminderToggle.checked;
+                localStorage.setItem('remindersEnabled', state.remindersEnabled);
+                if (state.remindersEnabled && Notification.permission !== "granted") {
+                    Notification.requestPermission();
+                }
+            }
+
+            function scheduleReminder() {
+                if (!state.remindersEnabled || Notification.permission !== 'granted' || !state.todaysWorkout) return;
+                const now = new Date();
+                const reminderTime = new Date();
+                reminderTime.setHours(20, 0, 0, 0); // 8:00 PM
+                if (now < reminderTime) {
+                    const timeout = reminderTime.getTime() - now.getTime();
+                    setTimeout(() => { new Notification("Time to Train!", { body: `Let's crush ${state.todaysWorkout.title} today. You've got this!` }); }, timeout);
+                }
+            }
+
+            function updateHiitUI() {
+                hiitTimerEl.textContent = hiitState.timeLeft;
+                hiitRoundEl.textContent = `Round ${hiitState.currentRound} / ${hiitState.totalRounds}`;
+                hiitStartPauseBtn.innerHTML = hiitState.running ? `<i data-lucide="pause"></i><span>Pause</span>` : `<i data-lucide="play"></i><span>Start</span>`;
+                lucide.createIcons();
+                let colorClass = 'bg-gray-800';
+                if (hiitState.mode === 'sprint') colorClass = 'bg-red-800';
+                if (hiitState.mode === 'rest') colorClass = 'bg-green-800';
+                hiitTimerDisplay.className = `flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-2xl ${colorClass}`;
+                hiitStatusEl.textContent = hiitState.mode === 'prep' ? 'GET READY' : hiitState.mode.toUpperCase() + '!';
+            }
+
+            function hiitTick() {
+                hiitState.timeLeft--;
+                if (hiitState.timeLeft < 0) {
+                    switch(hiitState.mode) {
+                        case 'prep': hiitState.mode = 'sprint'; hiitState.timeLeft = hiitState.sprintDuration; break;
+                        case 'sprint': hiitState.mode = 'rest'; hiitState.timeLeft = hiitState.restDuration; break;
+                        case 'rest':
+                            hiitState.currentRound++;
+                            if (hiitState.currentRound > hiitState.totalRounds) { resetHiit(); return; }
+                            hiitState.mode = 'sprint'; hiitState.timeLeft = hiitState.sprintDuration; break;
+                    }
+                }
+                updateHiitUI();
+            }
+
+            function toggleHiit() {
+                hiitState.running = !hiitState.running;
+                if (hiitState.running) {
+                    hiitState.timer = setInterval(hiitTick, 1000);
+                } else {
+                    clearInterval(hiitState.timer);
+                }
+                updateHiitUI();
+            }
+
+            function resetHiit() {
+                clearInterval(hiitState.timer);
+                hiitState.running = false;
+                hiitState.mode = 'prep';
+                hiitState.timeLeft = hiitState.prepDuration;
+                hiitState.currentRound = 1;
+                updateHiitUI();
+            }
+
+            function init() {
+                currentDateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                state.todaysWorkout = determineTodaysWorkout();
+                if (state.todaysWorkout) {
+                    workoutCard.classList.remove('hidden');
+                    restDayCard.classList.add('hidden');
+                    workoutTitle.textContent = state.todaysWorkout.title;
+                    workoutSubtitle.textContent = state.todaysWorkout.subtitle;
+                    workoutIconContainer.innerHTML = `<i data-lucide="${state.todaysWorkout.icon}"></i>`;
+                    lucide.createIcons();
+                } else {
+                    workoutCard.classList.add('hidden');
+                    restDayCard.classList.remove('hidden');
+                }
+                setupReminders();
+                scheduleReminder();
+                resetHiit();
+                showScreen('today-screen');
+            }
+
+            function attachEventListeners() {
+                navBtns.forEach(btn => btn.addEventListener('click', () => showScreen(btn.dataset.screen)));
+                goHomeBtn.addEventListener('click', init);
+                startWorkoutBtn.addEventListener('click', startWorkout);
+                reminderToggle.addEventListener('change', handleReminderToggle);
+                completeSetBtn.addEventListener('click', handleCompleteSet);
+                nextExerciseBtn.addEventListener('click', handleNextExercise);
+                finishWorkoutBtn.addEventListener('click', finishWorkout);
+                skipRestBtn.addEventListener('click', skipRest);
+                hiitStartPauseBtn.addEventListener('click', toggleHiit);
+                hiitResetBtn.addEventListener('click', resetHiit);
+            }
+
+            attachEventListeners();
+            init();
+        });
+    </script>
+</body>
+</html>
+
+
