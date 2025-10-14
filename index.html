@@ -465,9 +465,34 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
             border: 2px solid rgba(15, 23, 42, 0.8);
         }
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .preview-exercise-item {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+        .preview-exercise-item:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(236, 72, 153, 0.15));
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: translateX(4px);
+        }
     </style>
 </head>
 <body class="app-shell flex flex-col min-h-screen text-gray-100 antialiased">
+    <canvas id="confetti-canvas"></canvas>
 
     <!-- Main Content -->
     <main class="app-main flex-grow overflow-y-auto pb-24">
@@ -499,20 +524,80 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Workout Preview - Collapsible -->
+                <div id="workout-preview" class="border-t border-white/10 pt-4">
+                    <button id="toggle-preview-btn" class="w-full flex items-center justify-between text-left text-gray-300 hover:text-white transition-colors group">
+                        <span class="text-sm font-semibold uppercase tracking-wide flex items-center gap-2">
+                            <i data-lucide="list" class="w-4 h-4"></i>
+                            Exercise Preview
+                        </span>
+                        <i data-lucide="chevron-down" id="preview-chevron" class="w-5 h-5 transition-transform duration-300"></i>
+                    </button>
+                    <div id="preview-content" class="hidden mt-3 space-y-2 scale-in">
+                        <!-- Exercises will be inserted here -->
+                    </div>
+                </div>
+                
                 <button id="start-workout-btn" class="relative w-full bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-700 hover:via-pink-700 hover:to-rose-700 text-white font-bold py-6 rounded-2xl text-xl touch-active transition-all duration-300 shadow-[0_0_40px_rgba(168,85,247,0.5)] hover:shadow-[0_0_60px_rgba(168,85,247,0.7)] transform hover:scale-[1.02] overflow-hidden group">
                     <span class="relative z-10">Start Workout 💪</span>
                     <div class="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </button>
             </div>
             
-            <div id="rest-day-card" class="app-card rounded-3xl p-8 text-center space-y-4 hidden fade-in transition duration-300 transform hover:-translate-y-1">
-                <div class="flex justify-center">
-                    <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-4 rounded-2xl shadow-lg">
-                        <i data-lucide="bed-double"></i>
+            <div id="rest-day-card" class="app-card rounded-3xl p-8 space-y-5 hidden fade-in transition duration-300 transform hover:-translate-y-1">
+                <div class="text-center space-y-4">
+                    <div class="flex justify-center">
+                        <div class="bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 p-5 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.4)] animate-pulse">
+                            <i data-lucide="heart-pulse" class="w-12 h-12"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-extrabold bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">Rest Day</h2>
+                    <p class="text-gray-300 font-semibold text-lg">Your muscles grow when you rest 💤</p>
+                </div>
+                
+                <!-- Recovery Tips -->
+                <div class="bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded-2xl p-5 space-y-3">
+                    <h3 class="font-bold text-lg text-emerald-400 flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        Recovery Tips
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 mt-0.5">💧</span>
+                            <span><strong>Hydration:</strong> Drink 2-3 liters of water today</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 mt-0.5">🍗</span>
+                            <span><strong>Protein:</strong> Maintain protein intake for muscle repair</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 mt-0.5">😴</span>
+                            <span><strong>Sleep:</strong> Aim for 7-9 hours of quality sleep</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 mt-0.5">🚶</span>
+                            <span><strong>Light Activity:</strong> Walk, stretch, or do yoga</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Next Workout Preview -->
+                <div class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-5">
+                    <h3 class="font-bold text-base text-purple-400 mb-2 flex items-center gap-2">
+                        <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                        Next Workout
+                    </h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p id="next-workout-type" class="text-lg font-bold text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">Workout A</p>
+                            <p id="next-workout-day" class="text-xs text-gray-400 font-medium">Monday - Push & Squat</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-600 to-pink-600 p-3 rounded-xl shadow-lg">
+                            <i data-lucide="barbell" class="w-6 h-6"></i>
+                        </div>
                     </div>
                 </div>
-                <h2 class="text-3xl font-extrabold">Rest Day</h2>
-                <p class="text-gray-300 font-medium">Your muscles grow when you rest. Stay hydrated and eat well.</p>
             </div>
 
             <!-- Stats Card -->
@@ -532,11 +617,6 @@
                         <p class="text-xs text-gray-300 font-bold uppercase tracking-wide">This Week</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Motivational Quote -->
-            <div class="gradient-quote rounded-3xl p-6 fade-in">
-                <p class="text-white text-center italic font-medium text-lg" id="motivational-quote">"Discipline is choosing between what you want now and what you want most."</p>
             </div>
 
             <div class="app-card rounded-3xl p-6 space-y-3 fade-in transition duration-300 transform hover:-translate-y-1">
@@ -890,6 +970,9 @@
             const workoutSubtitle = document.getElementById('workout-subtitle');
             const workoutIconContainer = document.getElementById('workout-icon');
             const startWorkoutBtn = document.getElementById('start-workout-btn');
+            const togglePreviewBtn = document.getElementById('toggle-preview-btn');
+            const previewContent = document.getElementById('preview-content');
+            const previewChevron = document.getElementById('preview-chevron');
             const reminderToggle = document.getElementById('reminder-toggle');
             const currentExerciseTitle = document.getElementById('current-exercise-title');
             const progressText = document.getElementById('progress-text');
@@ -1204,6 +1287,9 @@
                 localStorage.setItem('workoutHistory', JSON.stringify(state.workoutHistory));
                 
                 showScreen('workout-complete-screen');
+                
+                // Trigger confetti celebration
+                createConfetti();
             }
 
             function setupReminders() {
@@ -1425,6 +1511,149 @@
                 }
             }
 
+            // Confetti Animation
+            function createConfetti() {
+                const canvas = document.getElementById('confetti-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                const confettiPieces = [];
+                const colors = ['#a855f7', '#ec4899', '#f43f5e', '#10b981', '#06b6d4', '#f59e0b'];
+                
+                for (let i = 0; i < 150; i++) {
+                    confettiPieces.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height - canvas.height,
+                        rotation: Math.random() * 360,
+                        rotationSpeed: Math.random() * 10 - 5,
+                        speed: Math.random() * 3 + 2,
+                        size: Math.random() * 8 + 4,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        swing: Math.random() * 2 - 1
+                    });
+                }
+                
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    let stillAnimating = false;
+                    
+                    confettiPieces.forEach(piece => {
+                        piece.y += piece.speed;
+                        piece.x += piece.swing;
+                        piece.rotation += piece.rotationSpeed;
+                        
+                        if (piece.y < canvas.height) {
+                            stillAnimating = true;
+                            ctx.save();
+                            ctx.translate(piece.x, piece.y);
+                            ctx.rotate(piece.rotation * Math.PI / 180);
+                            ctx.fillStyle = piece.color;
+                            ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size);
+                            ctx.restore();
+                        }
+                    });
+                    
+                    if (stillAnimating) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+                }
+                
+                animate();
+            }
+
+            // Workout Preview Toggle
+            function toggleWorkoutPreview() {
+                const previewContent = document.getElementById('preview-content');
+                const chevron = document.getElementById('preview-chevron');
+                
+                if (previewContent.classList.contains('hidden')) {
+                    previewContent.classList.remove('hidden');
+                    chevron.style.transform = 'rotate(180deg)';
+                } else {
+                    previewContent.classList.add('hidden');
+                    chevron.style.transform = 'rotate(0deg)';
+                }
+            }
+
+            // Render Workout Preview
+            function renderWorkoutPreview() {
+                const previewContent = document.getElementById('preview-content');
+                const workout = state.todaysWorkout;
+                
+                if (!workout) return;
+                
+                const allExercises = [...workout.exercises, ...workout.core];
+                const exerciseIcons = {
+                    'Squat': 'activity',
+                    'Press': 'move-up',
+                    'Push': 'arrow-up-circle',
+                    'Pull': 'arrow-down-circle',
+                    'Deadlift': 'trending-up',
+                    'Row': 'move-horizontal',
+                    'Curl': 'circle-dot',
+                    'Lunge': 'footprints',
+                    'Plank': 'minus',
+                    'Leg Raise': 'arrow-up',
+                    'Twist': 'rotate-cw'
+                };
+                
+                const getExerciseIcon = (name) => {
+                    for (const [key, icon] of Object.entries(exerciseIcons)) {
+                        if (name.includes(key)) return icon;
+                    }
+                    return 'dumbbell';
+                };
+                
+                previewContent.innerHTML = allExercises.map((ex, idx) => {
+                    const isCore = idx >= workout.exercises.length;
+                    const progressiveReps = getProgressiveReps(ex.reps);
+                    return `
+                        <div class="preview-exercise-item">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+                                <i data-lucide="${getExerciseIcon(ex.name)}" class="w-5 h-5"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-white">${ex.name}${isCore ? ' (Core)' : ''}</p>
+                                <p class="text-xs text-gray-400">${ex.sets} sets × ${progressiveReps}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                lucide.createIcons();
+            }
+
+            // Calculate next workout for rest day
+            function calculateNextWorkout() {
+                const today = new Date();
+                const nextWorkoutDays = [1, 3, 5]; // M, W, F
+                let daysToAdd = 1;
+                let nextDay = new Date(today);
+                
+                while (daysToAdd <= 7) {
+                    nextDay.setDate(today.getDate() + daysToAdd);
+                    if (nextWorkoutDays.includes(nextDay.getDay())) {
+                        break;
+                    }
+                    daysToAdd++;
+                }
+                
+                const nextType = state.lastWorkoutType === 'A' ? 'B' : 'A';
+                const nextWorkout = WORKOUTS[nextType];
+                
+                const nextWorkoutTypeEl = document.getElementById('next-workout-type');
+                const nextWorkoutDayEl = document.getElementById('next-workout-day');
+                
+                if (nextWorkoutTypeEl && nextWorkoutDayEl) {
+                    nextWorkoutTypeEl.textContent = nextWorkout.title;
+                    const dayName = nextDay.toLocaleDateString('en-US', { weekday: 'long' });
+                    nextWorkoutDayEl.textContent = `${dayName} - ${nextWorkout.subtitle}`;
+                }
+            }
+
             function init() {
                 currentDateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
                 state.todaysWorkout = determineTodaysWorkout();
@@ -1454,10 +1683,16 @@
                         progressWeekBadge.title = `You've been training for ${currentWeek} week${currentWeek > 1 ? 's' : ''}! Reps increase by +${getWeeksSinceStart()} this week.`;
                     }
                     
+                    // Render workout preview
+                    renderWorkoutPreview();
+                    
                     lucide.createIcons();
                 } else {
                     workoutCard.classList.add('hidden');
                     restDayCard.classList.remove('hidden');
+                    
+                    // Calculate and show next workout
+                    calculateNextWorkout();
                 }
                 setupReminders();
                 scheduleReminder();
@@ -1472,6 +1707,7 @@
                     showScreen('today-screen');
                 });
                 startWorkoutBtn.addEventListener('click', startWorkout);
+                togglePreviewBtn.addEventListener('click', toggleWorkoutPreview);
                 reminderToggle.addEventListener('change', handleReminderToggle);
                 completeSetBtn.addEventListener('click', handleCompleteSet);
                 nextExerciseBtn.addEventListener('click', handleNextExercise);
