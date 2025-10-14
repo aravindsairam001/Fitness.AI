@@ -22,6 +22,8 @@
         }
         .progress-bar-inner {
             transition: width 0.5s ease-in-out;
+            background: linear-gradient(90deg, #2563eb, #06b6d4);
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.45);
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
@@ -54,12 +56,198 @@
             50% { transform: scale(1.3) rotate(5deg); }
             75% { transform: scale(1.2) rotate(-5deg); }
         }
+        .app-shell {
+            position: relative;
+            background: radial-gradient(120% 120% at 0% 100%, rgba(56, 189, 248, 0.12) 0%, transparent 55%), radial-gradient(120% 120% at 100% 0%, rgba(129, 140, 248, 0.12) 0%, transparent 55%), #0f172a;
+            overflow-x: hidden;
+        }
+        .app-shell::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(2, 6, 23, 0.7), rgba(15, 23, 42, 0.4));
+            pointer-events: none;
+            z-index: 0;
+        }
+        .app-shell::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(37, 99, 235, 0.08), transparent 60%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .app-main {
+            position: relative;
+            z-index: 1;
+        }
+        .app-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.82), rgba(15, 23, 42, 0.92));
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+        .app-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(96, 165, 250, 0.22), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .app-card:hover::before {
+            opacity: 1;
+        }
+        .app-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .gradient-quote {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 18px 40px rgba(14, 116, 144, 0.45);
+        }
+        .gradient-quote::before {
+            content: "";
+            position: absolute;
+            inset: -30%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+            opacity: 0.35;
+            filter: blur(12px);
+        }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(14px);
+            border-top: 1px solid rgba(148, 163, 184, 0.15);
+            box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.45);
+            border-radius: 24px 24px 0 0;
+        }
+        .glass-nav .nav-btn {
+            position: relative;
+            color: #9ca3af;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .glass-nav .nav-btn::after {
+            content: "";
+            position: absolute;
+            inset: 4px 12px;
+            border-radius: 9999px;
+            background: rgba(59, 130, 246, 0.12);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .glass-nav .nav-btn i {
+            display: block;
+            margin: 0 auto 2px;
+        }
+        .glass-nav .nav-btn span {
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .glass-nav .nav-btn.text-blue-500 {
+            color: #60a5fa !important;
+            transform: translateY(-4px);
+        }
+        .glass-nav .nav-btn.text-blue-500::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #workout-icon {
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
+        }
+        #workout-card button,
+        #complete-set-btn,
+        #start-workout-btn,
+        #finish-workout-btn,
+        #next-exercise-btn,
+        #skip-rest-btn,
+        #add-time-btn,
+        #hiit-start-pause-btn,
+        #hiit-reset-btn,
+        #go-home-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        #workout-card button::before,
+        #complete-set-btn::before,
+        #start-workout-btn::before,
+        #finish-workout-btn::before,
+        #next-exercise-btn::before,
+        #skip-rest-btn::before,
+        #add-time-btn::before,
+        #hiit-start-pause-btn::before,
+        #hiit-reset-btn::before,
+        #go-home-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.15), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #workout-card button:hover::before,
+        #complete-set-btn:hover::before,
+        #start-workout-btn:hover::before,
+        #finish-workout-btn:hover::before,
+        #next-exercise-btn:hover::before,
+        #skip-rest-btn:hover::before,
+        #add-time-btn:hover::before,
+        #hiit-start-pause-btn:hover::before,
+        #hiit-reset-btn:hover::before,
+        #go-home-btn:hover::before {
+            opacity: 1;
+        }
+        #exercise-tip {
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            box-shadow: inset 0 0 20px rgba(37, 99, 235, 0.12);
+        }
+        #rest-timer {
+            text-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);
+        }
+        #hiit-timer {
+            text-shadow: 0 10px 35px rgba(37, 99, 235, 0.4);
+        }
+        #hiit-timer-display {
+            transition: background 0.6s ease, box-shadow 0.6s ease;
+            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.45);
+        }
+        #hiit-status {
+            letter-spacing: 0.35em;
+        }
+        #hiit-round {
+            letter-spacing: 0.08em;
+            color: rgba(203, 213, 225, 0.8);
+        }
+        #hiit-timer-display.hiit-idle {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.9));
+        }
+        #hiit-timer-display.hiit-active {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(21, 128, 61, 0.5));
+        }
+        #hiit-timer-display.hiit-rest {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.32));
+        }
+        #today-screen header h1 {
+            letter-spacing: -0.02em;
+        }
+        #today-screen header p {
+            letter-spacing: 0.02em;
+        }
+        .stat-value {
+            font-variant-numeric: tabular-nums;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 flex flex-col h-screen antialiased">
+<body class="app-shell flex flex-col min-h-screen text-gray-100 antialiased">
 
     <!-- Main Content -->
-    <main class="flex-grow overflow-y-auto pb-20">
+    <main class="app-main flex-grow overflow-y-auto pb-24">
         <!-- Today Screen -->
         <div id="today-screen" class="p-6 space-y-6">
             <header>
@@ -67,7 +255,7 @@
                 <p class="text-gray-400" id="current-date">Let's get stronger today.</p>
             </header>
 
-            <div id="workout-card" class="bg-gray-800 rounded-2xl p-6 space-y-4 shadow-lg fade-in">
+            <div id="workout-card" class="app-card bg-gray-800 rounded-2xl p-6 space-y-4 fade-in transition duration-300 transform hover:-translate-y-1">
                  <div class="flex items-center space-x-4">
                     <div id="workout-icon" class="bg-blue-600 p-3 rounded-full">
                         <!-- Icon will be inserted here -->
@@ -83,7 +271,7 @@
                 </button>
             </div>
             
-            <div id="rest-day-card" class="bg-gray-800 rounded-2xl p-6 text-center space-y-3 shadow-lg hidden fade-in">
+            <div id="rest-day-card" class="app-card bg-gray-800 rounded-2xl p-6 text-center space-y-3 hidden fade-in transition duration-300 transform hover:-translate-y-1">
                 <div class="flex justify-center">
                     <div class="bg-green-600 p-3 rounded-full">
                         <i data-lucide="bed-double"></i>
@@ -94,30 +282,30 @@
             </div>
 
             <!-- Stats Card -->
-            <div class="bg-gray-800 rounded-2xl p-5 shadow-lg space-y-3 fade-in">
+            <div class="app-card bg-gray-800 rounded-2xl p-5 space-y-3 fade-in transition duration-300 transform hover:-translate-y-1">
                 <h3 class="font-bold text-lg">Your Progress</h3>
                 <div class="grid grid-cols-3 gap-3">
                     <div class="text-center">
-                        <p class="text-3xl font-bold text-blue-400" id="workout-streak">0</p>
+                        <p class="text-3xl font-bold text-blue-400 stat-value" id="workout-streak">0</p>
                         <p class="text-xs text-gray-400">Day Streak</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-3xl font-bold text-green-400" id="total-workouts">0</p>
+                        <p class="text-3xl font-bold text-green-400 stat-value" id="total-workouts">0</p>
                         <p class="text-xs text-gray-400">Workouts</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-3xl font-bold text-purple-400" id="this-week">0</p>
+                        <p class="text-3xl font-bold text-purple-400 stat-value" id="this-week">0</p>
                         <p class="text-xs text-gray-400">This Week</p>
                     </div>
                 </div>
             </div>
 
             <!-- Motivational Quote -->
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-5 shadow-lg fade-in">
+            <div class="gradient-quote bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-5 fade-in">
                 <p class="text-white text-center italic" id="motivational-quote">"Discipline is choosing between what you want now and what you want most."</p>
             </div>
 
-            <div class="bg-gray-800 rounded-2xl p-5 shadow-lg space-y-3 fade-in">
+            <div class="app-card bg-gray-800 rounded-2xl p-5 space-y-3 fade-in transition duration-300 transform hover:-translate-y-1">
                 <div class="flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-lg">Workout Reminders</h3>
@@ -138,7 +326,7 @@
                 <button id="back-to-home-btn" class="text-gray-400 hover:text-white touch-active">
                     <i data-lucide="arrow-left"></i>
                 </button>
-                <p id="progress-text" class="text-gray-400 font-medium">1 / 8</p>
+                <p id="progress-text" class="text-xs uppercase tracking-wide text-gray-300 bg-white/5 border border-white/10 rounded-full px-4 py-1">1 / 8</p>
             </div>
             <div class="flex items-center justify-between">
                 <h2 id="current-exercise-title" class="text-2xl font-bold">Goblet Squats</h2>
@@ -150,7 +338,7 @@
                 <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full progress-bar-inner" style="width: 10%"></div>
             </div>
 
-            <div class="text-center bg-gray-800 rounded-2xl p-8 my-4 fade-in">
+            <div class="app-card text-center bg-gray-800 rounded-2xl p-8 my-4 fade-in transition duration-300 transform hover:-translate-y-1">
                 <div id="exercise-tip" class="bg-blue-900 bg-opacity-30 rounded-lg p-3 mb-4 text-sm text-blue-200 hidden">
                     <p id="exercise-tip-text"></p>
                 </div>
@@ -161,7 +349,7 @@
 
             <button id="complete-set-btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-lg touch-active transition-all duration-200">Complete Set</button>
 
-            <div id="rest-timer-view" class="hidden text-center fade-in">
+            <div id="rest-timer-view" class="app-card hidden text-center fade-in mt-4 p-6 rounded-2xl">
                 <p class="text-lg text-green-400 font-bold">REST</p>
                 <p id="rest-timer" class="text-6xl font-extrabold my-2">60</p>
                 <div class="flex justify-center gap-3 mt-3">
@@ -181,15 +369,15 @@
             </div>
             <h2 class="text-4xl font-bold">Workout Complete!</h2>
             <p class="text-gray-300 max-w-sm">Amazing work. You've pushed your limits. Now remember to refuel with protein and get a good night's sleep.</p>
-            <div class="bg-gray-800 rounded-xl p-4 max-w-sm w-full mt-4">
+            <div class="app-card rounded-xl p-4 max-w-sm w-full mt-4 transition duration-300 transform hover:-translate-y-1">
                 <p class="text-sm text-gray-400 mb-2">Session Summary</p>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <p class="text-2xl font-bold text-blue-400" id="session-exercises">8</p>
+                        <p class="text-2xl font-bold text-blue-400 stat-value" id="session-exercises">8</p>
                         <p class="text-xs text-gray-400">Exercises</p>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-green-400" id="session-sets">24</p>
+                        <p class="text-2xl font-bold text-green-400 stat-value" id="session-sets">24</p>
                         <p class="text-xs text-gray-400">Sets</p>
                     </div>
                 </div>
@@ -204,7 +392,7 @@
                 <h2 class="text-2xl font-bold">HIIT Finisher</h2>
                 <p class="text-gray-400">15 Minutes to incinerate fat.</p>
             </div>
-            <div id="hiit-timer-display" class="flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-2xl bg-gray-800">
+            <div id="hiit-timer-display" class="app-card flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-2xl hiit-idle">
                  <p id="hiit-status" class="text-3xl font-bold tracking-widest uppercase text-gray-400">GET READY</p>
                  <p id="hiit-timer" class="text-9xl font-extrabold my-2">10</p>
                  <p id="hiit-round" class="text-lg text-gray-300">Round 1 / 10</p>
@@ -224,28 +412,28 @@
             <p class="text-gray-400">Your diet is fixed, but your discipline isn't. Control what you can control.</p>
             
             <div class="space-y-3">
-                <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                <div class="app-card p-4 rounded-xl flex items-start space-x-4 transition duration-300 transform hover:-translate-y-1">
                     <i data-lucide="hand" class="text-blue-400 mt-1 flex-shrink-0"></i>
                     <div>
                         <h3 class="font-semibold">Portion Control is #1</h3>
                         <p class="text-gray-300 text-sm">Rice: 1 clenched fist. Veggies: Half your plate. Protein: Palm of your hand.</p>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                <div class="app-card p-4 rounded-xl flex items-start space-x-4 transition duration-300 transform hover:-translate-y-1">
                     <i data-lucide="egg" class="text-yellow-400 mt-1 flex-shrink-0"></i>
                     <div>
                         <h3 class="font-semibold">Prioritize Protein</h3>
                         <p class="text-gray-300 text-sm">Eat your chicken/eggs first. Have 2-3 eggs for breakfast daily. Consider a post-workout whey protein shake.</p>
                     </div>
                 </div>
-                 <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                 <div class="app-card p-4 rounded-xl flex items-start space-x-4 transition duration-300 transform hover:-translate-y-1">
                     <i data-lucide="glass-water" class="text-cyan-400 mt-1 flex-shrink-0"></i>
                     <div>
                         <h3 class="font-semibold">Hydrate Aggressively</h3>
                         <p class="text-gray-300 text-sm">Drink a large glass of water before each meal. Aim for 2-3 liters per day.</p>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg flex items-start space-x-4">
+                <div class="app-card p-4 rounded-xl flex items-start space-x-4 transition duration-300 transform hover:-translate-y-1">
                     <i data-lucide="zap-off" class="text-red-400 mt-1 flex-shrink-0"></i>
                     <div>
                         <h3 class="font-semibold">Minimize Sauces & Oils</h3>
@@ -265,16 +453,16 @@
             </div>
             
             <div class="grid grid-cols-3 gap-3 mb-6">
-                <div class="bg-gray-800 rounded-xl p-4 text-center">
-                    <p class="text-2xl font-bold text-blue-400" id="history-streak">0</p>
+                <div class="app-card rounded-xl p-4 text-center transition duration-300 transform hover:-translate-y-1">
+                    <p class="text-2xl font-bold text-blue-400 stat-value" id="history-streak">0</p>
                     <p class="text-xs text-gray-400 mt-1">Current Streak</p>
                 </div>
-                <div class="bg-gray-800 rounded-xl p-4 text-center">
-                    <p class="text-2xl font-bold text-green-400" id="history-total">0</p>
+                <div class="app-card rounded-xl p-4 text-center transition duration-300 transform hover:-translate-y-1">
+                    <p class="text-2xl font-bold text-green-400 stat-value" id="history-total">0</p>
                     <p class="text-xs text-gray-400 mt-1">Total</p>
                 </div>
-                <div class="bg-gray-800 rounded-xl p-4 text-center">
-                    <p class="text-2xl font-bold text-purple-400" id="history-month">0</p>
+                <div class="app-card rounded-xl p-4 text-center transition duration-300 transform hover:-translate-y-1">
+                    <p class="text-2xl font-bold text-purple-400 stat-value" id="history-month">0</p>
                     <p class="text-xs text-gray-400 mt-1">This Month</p>
                 </div>
             </div>
@@ -292,22 +480,22 @@
     </main>
 
     <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 flex justify-around">
-        <button data-screen="today-screen" class="nav-btn flex-1 p-3 text-center text-blue-500">
+    <nav class="glass-nav fixed bottom-0 left-0 right-0 flex justify-around px-4 py-2 z-20">
+        <button data-screen="today-screen" class="nav-btn flex-1 flex flex-col items-center gap-1 py-2 rounded-2xl text-blue-500 transition duration-200">
             <i data-lucide="home"></i>
-            <span class="text-xs block">Today</span>
+            <span class="block">Today</span>
         </button>
-        <button data-screen="hiit-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
+        <button data-screen="hiit-screen" class="nav-btn flex-1 flex flex-col items-center gap-1 py-2 rounded-2xl text-gray-400 transition duration-200">
             <i data-lucide="timer"></i>
-            <span class="text-xs block">HIIT Timer</span>
+            <span class="block">HIIT Timer</span>
         </button>
-        <button data-screen="diet-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
+        <button data-screen="diet-screen" class="nav-btn flex-1 flex flex-col items-center gap-1 py-2 rounded-2xl text-gray-400 transition duration-200">
             <i data-lucide="utensils-crossed"></i>
-            <span class="text-xs block">Diet</span>
+            <span class="block">Diet</span>
         </button>
-        <button data-screen="history-screen" class="nav-btn flex-1 p-3 text-center text-gray-400">
+        <button data-screen="history-screen" class="nav-btn flex-1 flex flex-col items-center gap-1 py-2 rounded-2xl text-gray-400 transition duration-200">
             <i data-lucide="calendar-clock"></i>
-            <span class="text-xs block">History</span>
+            <span class="block">History</span>
         </button>
     </nav>
     
@@ -614,10 +802,10 @@
                 hiitRoundEl.textContent = `Round ${hiitState.currentRound} / ${hiitState.totalRounds}`;
                 hiitStartPauseBtn.innerHTML = hiitState.running ? `<i data-lucide="pause"></i><span>Pause</span>` : `<i data-lucide="play"></i><span>Start</span>`;
                 lucide.createIcons();
-                let colorClass = 'bg-gray-800';
-                if (hiitState.mode === 'sprint') colorClass = 'bg-red-800';
-                if (hiitState.mode === 'rest') colorClass = 'bg-green-800';
-                hiitTimerDisplay.className = `flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-2xl ${colorClass}`;
+                let modeClass = 'hiit-idle';
+                if (hiitState.mode === 'sprint') modeClass = 'hiit-active';
+                if (hiitState.mode === 'rest') modeClass = 'hiit-rest';
+                hiitTimerDisplay.className = `app-card flex flex-col items-center justify-center flex-grow transition-colors duration-500 rounded-2xl ${modeClass}`;
                 hiitStatusEl.textContent = hiitState.mode === 'prep' ? 'GET READY' : hiitState.mode.toUpperCase() + '!';
             }
 
@@ -757,7 +945,7 @@
                     const workoutInfo = WORKOUTS[workout.type];
                     
                     return `
-                        <div class="bg-gray-800 rounded-xl p-4 flex items-center justify-between fade-in">
+                        <div class="app-card rounded-xl p-4 flex items-center justify-between fade-in transition duration-300 transform hover:-translate-y-1">
                             <div class="flex items-center space-x-4">
                                 <div class="bg-${workout.type === 'A' ? 'blue' : 'purple'}-600 p-3 rounded-lg">
                                     <i data-lucide="${workoutInfo.icon}" class="w-5 h-5"></i>
@@ -850,5 +1038,3 @@
     </script>
 </body>
 </html>
-
-
